@@ -28,8 +28,11 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # hello world page
+    # create the database and initialize connection
+    from . import db
+    db.init_app(app)
 
+    # hello world page
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
