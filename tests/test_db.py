@@ -32,6 +32,5 @@ def test_init_db_command(runner, monkeypatch):
     monkeypatch.setattr('flaskr.db.init_db', fake_init_db) # Replaces init_db with fake_init_db
     # When
     result = runner.invoke(args=['init-db']) # test runner executes command init-db (which executes init_db), which is replaced by fake_init_db
-    # Then
     assert 'Initialized' in result.output
     assert Recorder.called
