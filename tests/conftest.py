@@ -1,33 +1,50 @@
+# conftest.py
+# Pytest uses fixtures by matching their function names with the names of arguments in the test functions.
+# They are usually residing in conftest.py file.
+# They don't have to be explicitly used in the testing function, it is enought to pass them as parameters.
+
 import os
 import tempfile
 
 import pytest
+
 from flaskr import create_app
-from flaskr.db import get_db, init_db
+from flaskr.extensions import db
+from flaskr.models import User, Post
 
-with open(os.path.join(os.path.dirname(__file__), 'data.sql'), 'rb') as f:
-    _data_sql = f.read().decode('utf8')
 
-# Pytest uses fixtures by matching their function names with the names of arguments in the test functions. 
-
-@pytest.fixture
+@pytest.fixture(scope="module") # This fixture is destroyed during teardown of the last test in the "module".
 def app():
-    db_fd, db_path = tempfile.mkstemp() # Temporary file containing testing database instead of instance folder. Removed after testing.
-
+    # The app fixture will call the factory and pass test_config to configure the application and database for testing
     app = create_app({
         'TESTING': True, # Tells Flask that the app is in test mode to change some internal behavior. Other extensions can also use the flag.
-        'DATABASE': db_path,
+        'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:'
     })
 
     with app.app_context():
-        init_db()
-        get_db().executescript(_data_sql) # Insert testing data to testing database.
+        # Pass application context in case there is no request.
+        yield app
 
-    yield app
 
-    os.close(db_fd)
-    os.unlink(db_path)
-
+@pytest.fixture
+def database():
+    # The database fixture will create all tables in testing app's db and insert testing data.
+    # This is also test for werkzeug.security.
+    db.create_all()
+    ########################## TESTING DATA ##########################
+    user = User(username='test', 
+    password='pbkdf2:sha256:260000$5nA3Qw0INBKctANp$d02abb7c77f46bf38708c97a0fb8b3067c5944e85f04fb2b8e31164cf9562d62')
+    user.save()
+    user = User(username='other', 
+    password='pbkdf2:sha256:260000$5nA3Qw0INBKctANp$d02abb7c77f46bf38708c97a0fb8b3067c5944e85f04fb2b8e31164cf9562d62')
+    user.save()
+    post = Post(title='test title', body='test\nbody', author_id=1)
+    post.save()
+    ##################################################################
+    yield db
+    # Drop on teardown.
+    db.session.remove()
+    db.drop_all()
 
 @pytest.fixture
 def client(app):
@@ -38,6 +55,7 @@ def client(app):
 @pytest.fixture
 def runner(app):
     # Creates a runner that can call the Click commands registered with the application.
+    # It is currently not used but kept for future reference.
     return app.test_cli_runner()
 
 
@@ -48,7 +66,7 @@ class AuthActions(object):
         self._client = client
 
     def login(self, username='test', password='test'):
-        # Test client sends predefined test data to the endpoint.
+        # Login test client.
         return self._client.post(
             '/auth/login',
             data={'username': username, 'password': password}
@@ -61,5 +79,5 @@ class AuthActions(object):
 
 @pytest.fixture
 def auth(client):
-    # Allows to call auth.login() in a test to log in as the test user.
+    # Allows to call auth.login() etc. in a test to log in as the test user.
     return AuthActions(client)

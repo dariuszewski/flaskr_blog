@@ -1,16 +1,16 @@
-# contains methods to register, login and logout users 
-
+# auth.py 
+# Contains methods to register, login and logout users 
 
 import functools
-from operator import methodcaller
-from webbrowser import get
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
+from sqlalchemy import exc
 
-from flaskr.db import get_db
+from flaskr.extensions import db
+from flaskr.models import User
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -20,7 +20,6 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db = get_db()
         error = None
 
         if not username:
@@ -30,13 +29,11 @@ def register():
 
         if error is None:
             try:
-                db.execute(
-                    "INSERT INTO user (username, password) VALUES (?, ?)",
-                    (username, generate_password_hash(password)),
-                )
-                db.commit()
-            except db.IntegrityError:
+                user = User(username=username, password=generate_password_hash(password))
+                user.save()
+            except exc.IntegrityError:
                 error = f"User {username} is already registered."
+                db.session.rollback()
             else:
                 return redirect(url_for("auth.login"))
 
@@ -50,20 +47,18 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db = get_db()
         error = None
-        user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username,)
-        ).fetchone()
+
+        user = User.get_user_by_username(username=username)
 
         if user is None:
             error = 'Incorrect username.'
-        elif not check_password_hash(user['password'], password):
+        elif not check_password_hash(user.password, password):
             error = 'Incorrect password.'
 
         if error is None:
             session.clear()
-            session['user_id'] = user['id']
+            session['user_id'] = user.id
             return redirect(url_for('index'))
 
         flash(error)
@@ -73,15 +68,13 @@ def login():
 
 @bp.before_app_request
 def load_logged_in_user():
-    # this checks if user is logged in or not
+    # This checks if user is logged in or not.
     user_id = session.get('user_id')
 
     if user_id is None:
         g.user = None
     else:
-        g.user = get_db().execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
-        ).fetchone()
+        g.user = User.get_user_by_id(id=user_id)
 
 
 @bp.route('/logout')
