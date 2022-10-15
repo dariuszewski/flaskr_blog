@@ -18,7 +18,8 @@ def app():
     # The app fixture will call the factory and pass test_config to configure the application and database for testing
     app = create_app({
         'TESTING': True, # Tells Flask that the app is in test mode to change some internal behavior. Other extensions can also use the flag.
-        'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:'
+        'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
+        'SECRET_KEY': 'test'
     })
 
     with app.app_context():

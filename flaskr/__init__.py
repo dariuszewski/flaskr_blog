@@ -3,28 +3,25 @@ import os
 from flask import Flask
 
 
-# Application Factory Pattern
-# This can be called with a parameter such as flask run --app flaskr:create_app(test_config=True)
+# Application Factory Pattern. This can be called with flask run --app flaskr:create_app
+# App will expect to have $env:APP_SETTINGS variable which contains Config Object (ex. flaskr.config.DevelopmentConfig). 
 def create_app(test_config=None):
-    # create and configure the app
+    # Create and configure the app.
     app = Flask(__name__, instance_relative_config=True)
     # The instance folder is designed to not be under version control and be deployment specific. 
     # It’s the perfect place to drop things that either change at runtime or configuration files.
-    # TODO: 'try to parametrize instance_relative_config variable to create staging and production environments'
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        SQLALCHEMY_DATABASE_URI='sqlite:///' + os.path.join(app.instance_path, 'flaskr.sqlite') # this is only if used sqlite
-    )
-    print(app.config["SQLALCHEMY_DATABASE_URI"])
-    if test_config is None:  # this will override app.config.from_mapping()
-        # load the instance config if not testing
-        app.config.from_pyfile('config.py', silent=True)
-    else:
-        # load testing config when passed in
-        app.config.from_mapping(test_config) # special configuration for testing purposes
 
-    # ensure the instance folder exists
-    # this is only for sqlite
+    os.environ["APP_SETTINGS"] = 'flaskr.config.DevelopmentConfig' #
+    # Override app.config.from_mapping()
+    if test_config is None:
+        # load the instance config if not testing
+        app_settings = os.getenv('APP_SETTINGS') or 'flaskr.config.DevelopmentConfig'
+        app.config.from_object(app_settings)
+    else:
+        # Load testing config when passed in. 
+        app.config.from_mapping(test_config) # Special configuration for testing purposes.
+
+    # Ensure the instance folder exists, this is only for sqlite.
     try:
         os.makedirs(app.instance_path)
     except OSError:
