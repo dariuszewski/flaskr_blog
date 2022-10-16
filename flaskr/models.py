@@ -15,6 +15,7 @@ class User(db.Model):
     password = db.Column(db.String(120))
 
     posts = db.relationship("Post")
+    likes = db.relationship('Like', passive_deletes=True)
 
 
     @staticmethod
@@ -38,6 +39,8 @@ class Post(db.Model):
     body = db.Column(db.String(2000))
 
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+
+    likes = db.relationship('Like', passive_deletes=True)
 
     @staticmethod
     def get_posts_and_usernames():
@@ -63,11 +66,30 @@ class Post(db.Model):
 
 
 class Like(db.Model):
-    __tablename__ = 'like'
+    __tablename__ = 'likes'
     id = db.Column(db.Integer, primary_key=True)
 
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"))
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+
+    @staticmethod
+    def get_like_by_post_and_author(post_id, author_id):
+        return db.session.execute(db
+            .select(Like)
+            .filter_by(post_id=post_id, author_id=author_id)).scalar()
+    
+    @staticmethod
+    def count_likes_of_post(post_id):
+        return db.session
+        return db.session.execute(db
+            .select(Like.id)
+            .filter_by(post_id=post_id)).count()
+    
+    @staticmethod
+    def get_likes_of_post(post_id):
+        return db.session.execute(db
+            .select(Like)
+            .filter_by(post_id=post_id)).all()
 
     def save(self):
         db.session.add(self)

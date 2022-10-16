@@ -1,11 +1,11 @@
-from turtle import pos
+from operator import pos
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from werkzeug.exceptions import abort
 
 from flaskr.auth import login_required
-from flaskr.models import Post
+from flaskr.models import Post, Like
 from flaskr.extensions import db
 
 
@@ -22,9 +22,10 @@ def index():
 def read(id):
     # Checks if post exists.
     post = get_post(id, check_author=False)
+    likes = Like.get_likes_of_post(post_id=id)
     # Returns post with author id.
     post = Post.get_post_and_author(id)
-    return render_template('blog/read.html', post=post)
+    return render_template('blog/read.html', post=post, likes=likes)
 
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -93,3 +94,20 @@ def delete(id):
     db.session.delete(post)
     db.session.commit()
     return redirect(url_for('blog.index'))
+
+
+@bp.route('/<int:post_id>/like', methods=('GET',))
+@login_required
+def like_action(post_id):
+    post = get_post(post_id, check_author=False)
+    like = Like.get_like_by_post_and_author(post_id=post_id, author_id=g.user.id)
+    if like:
+        print(like)
+        db.session.delete(like)
+        db.session.commit()
+    else:
+        like = Like(post_id=post_id, author_id=g.user.id)
+        like.save()
+    id = post_id
+
+    return redirect(url_for(f'blog.read', id=post_id))
