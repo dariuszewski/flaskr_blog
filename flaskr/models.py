@@ -62,8 +62,8 @@ class Post(db.Model):
         db.session.commit()
 
 
-class Post(db.Model):
-    __tablename__ = 'post'
+class Like(db.Model):
+    __tablename__ = 'like'
     id = db.Column(db.Integer, primary_key=True)
 
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"))
