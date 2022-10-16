@@ -14,8 +14,8 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(120))
 
-    posts = db.relationship("Post")
-    likes = db.relationship('Like', passive_deletes=True)
+    posts = db.relationship("Post", backref='user')
+    likes = db.relationship('Like', backref='user', passive_deletes=True)
 
 
     @staticmethod
@@ -40,21 +40,22 @@ class Post(db.Model):
 
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
-    likes = db.relationship('Like', passive_deletes=True)
+    likes = db.relationship('Like', backref="post", passive_deletes=True)
 
     @staticmethod
-    def get_posts_and_usernames():
+    def get_all():
         return db.session.execute(db
-            .select(Post.id, Post.title, Post.body, Post.created, Post.author_id, User.username)
-            .join(Post, User.posts)
-            .order_by(desc(Post.created))).all()
-    
+            .select(Post)
+            .order_by(desc(Post.created))).scalars()
+
     @staticmethod
     def get_post_by_id(id):
-        return db.session.execute(db.select(Post).filter_by(id=id)).scalar()
+        return db.session.execute(db
+            .select(Post)
+            .filter_by(id=id)).scalar()
     
     @staticmethod
-    def get_post_and_author(id):
+    def get_by_id(id):
         return db.session.execute(db
             .select(Post.id, Post.title, Post.body, Post.created, Post.author_id, User.username)
             .join(Post, User.posts)
@@ -77,19 +78,6 @@ class Like(db.Model):
         return db.session.execute(db
             .select(Like)
             .filter_by(post_id=post_id, author_id=author_id)).scalar()
-    
-    @staticmethod
-    def count_likes_of_post(post_id):
-        return db.session
-        return db.session.execute(db
-            .select(Like.id)
-            .filter_by(post_id=post_id)).count()
-    
-    @staticmethod
-    def get_likes_of_post(post_id):
-        return db.session.execute(db
-            .select(Like)
-            .filter_by(post_id=post_id)).all()
 
     def save(self):
         db.session.add(self)
