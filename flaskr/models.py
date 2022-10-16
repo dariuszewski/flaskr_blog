@@ -1,3 +1,4 @@
+from os import stat
 from sqlalchemy import desc
 
 from flaskr.extensions import db
@@ -48,6 +49,13 @@ class Post(db.Model):
     @staticmethod
     def get_post_by_id(id):
         return db.session.execute(db.select(Post).filter_by(id=id)).scalar()
+    
+    @staticmethod
+    def get_post_and_author(id):
+        return db.session.execute(db
+            .select(Post.id, Post.title, Post.body, Post.created, Post.author_id, User.username)
+            .join(Post, User.posts)
+            .filter_by(id=id)).first()
 
     def save(self):
         db.session.add(self)
