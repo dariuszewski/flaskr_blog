@@ -1,3 +1,4 @@
+from turtle import pos
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
@@ -15,6 +16,15 @@ bp = Blueprint('blog', __name__)
 def index():
     posts = Post.get_posts_and_usernames()
     return render_template('blog/index.html', posts=posts)
+
+
+@bp.route('/<int:id>/read', methods=('GET',))
+def read(id):
+    # Checks if post exists.
+    post = get_post(id, check_author=False)
+    # Returns post with author id.
+    post = Post.get_post_and_author(id)
+    return render_template('blog/read.html', post=post)
 
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -39,7 +49,7 @@ def create():
 
 
 def get_post(id, check_author=True):
-    # get_post is used by update and delete routes
+    # get_post is used by update and delete routes.
 
     post = Post.get_post_by_id(id)
 

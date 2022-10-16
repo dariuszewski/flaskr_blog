@@ -102,3 +102,19 @@ def test_delete(client, auth, app, database):
     assert response.headers["Location"] == "/"
     # Then: Post with id=1 doesn't exist in the database.
     assert Post.get_post_by_id(1) is None
+
+
+def test_read(client, auth, database):
+    # Given: user is not logged in.
+    # When:
+    response = client.get('/1/read')
+    # Then: Anyone can read post.
+    assert b'href="/1/update"' not in response.data
+    assert b'Post #1' in response.data
+
+    # Given: User is logged in and there is a post and predefined database.
+    auth.login()
+    # When:
+    response = client.get('/1/read')
+    # Then:
+    assert b'href="/1/update"' in response.data
