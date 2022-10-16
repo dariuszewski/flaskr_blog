@@ -22,8 +22,14 @@
       <p class="body">{{ post['body'] }}</p>
       <hr>
       <span>
-        <a href="/{{ post.id }}/like"><i class="fa-regular fa-thumbs-up"></i> </a>
-        Likes: {{ post.likes|length }}
+        <span></span>
+
+        <i class="fa-regular fa-thumbs-up" 
+           id="like-button-{{ post['id'] }}"
+           onclick="like( {{ post['id'] }} )"></i>
+
+         Likes: <span id="like-count-{{ post['id'] }}"
+                      value=>{{ post.likes|length }}</span>
       </span>
     </article>
     {% if not loop.last %}

@@ -135,3 +135,7 @@ input[type=submit] {
     align-self: start;
     min-width: 10em;
 }
+
+i {
+    color: #377ba8;
+}

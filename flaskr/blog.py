@@ -1,6 +1,5 @@
-from operator import pos
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 )
 from werkzeug.exceptions import abort
 
@@ -94,7 +93,7 @@ def delete(id):
     return redirect(url_for('blog.index'))
 
 
-@bp.route('/<int:post_id>/like', methods=('GET',))
+@bp.route('/<int:post_id>/like', methods=('POST',))
 @login_required
 def like_action(post_id, from_index=True):
     # Check if post exists.
@@ -106,8 +105,9 @@ def like_action(post_id, from_index=True):
     else:
         like = Like(post_id=post_id, author_id=g.user.id)
         like.save()
-
-    if from_index:
-        return redirect(url_for(f'blog.index'))
-    else:
-        return redirect(url_for(f'blog.read', id=post_id))
+    like = Like.get_like_by_post_and_author(post_id=post_id, author_id=g.user.id)
+    print(like)
+    return jsonify({
+        "likes": len(post.likes),
+        "liked": bool(like)
+    })
