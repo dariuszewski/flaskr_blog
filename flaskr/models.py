@@ -61,3 +61,14 @@ class Post(db.Model):
         db.session.add(self)
         db.session.commit()
 
+
+class Post(db.Model):
+    __tablename__ = 'post'
+    id = db.Column(db.Integer, primary_key=True)
+
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"))
+    author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
