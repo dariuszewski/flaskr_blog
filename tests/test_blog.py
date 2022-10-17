@@ -118,3 +118,22 @@ def test_read(client, auth, database):
     response = client.get('/1/read')
     # Then:
     assert b'href="/1/update"' in response.data
+
+
+def test_like(client, auth, database):
+    # Given: Not logged in user.
+    # When: Likes post.
+    resposne = client.post('/1/like')
+    # Assert: Post #1 have only 1 like (which was preloaded).
+    assert len(Post.get_post_by_id(1).likes) == 1 
+    # Given: Logged in user which didn't like the post before.
+    auth.login()
+    # When: Likes post.
+    resposne = client.post('/1/like')
+    # Assert: New like was registered.
+    assert len(Post.get_post_by_id(1).likes) == 2
+    # When: Same user likes posts again.
+    resposne = client.post('/1/like')
+    # Assert: Post #1 have only 1 like - dislike was registered.
+    assert len(Post.get_post_by_id(1).likes) == 1 
+

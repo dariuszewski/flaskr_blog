@@ -53,13 +53,6 @@ class Post(db.Model):
         return db.session.execute(db
             .select(Post)
             .filter_by(id=id)).scalar()
-    
-    @staticmethod
-    def get_by_id(id):
-        return db.session.execute(db
-            .select(Post.id, Post.title, Post.body, Post.created, Post.author_id, User.username)
-            .join(Post, User.posts)
-            .filter_by(id=id)).first()
 
     def save(self):
         db.session.add(self)

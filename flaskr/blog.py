@@ -95,7 +95,7 @@ def delete(id):
 
 @bp.route('/<int:post_id>/like', methods=('POST',))
 @login_required
-def like_action(post_id, from_index=True):
+def like_action(post_id):
     # Check if post exists.
     post = get_post(post_id, check_author=False)
     like = Like.get_like_by_post_and_author(post_id=post_id, author_id=g.user.id)
