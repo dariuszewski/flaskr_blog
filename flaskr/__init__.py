@@ -35,6 +35,7 @@ def create_app(test_config=None):
     # Create the database tables in the app context (since no request is available at this stage).
     # This doesn't update existing tables (use Alembic to do that).
     with app.app_context():
+        from flaskr.models import User, Post, Like
         db.create_all()
 
     # register blueprints

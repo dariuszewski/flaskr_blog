@@ -1,0 +1,37 @@
+<article class="post">
+    <header>
+        <div>
+            <h1><a href="{{ url_for('blog.read', id=post['id']) }}">{{ post['title'] }}</a></h1>
+            <div class="about">by {{ post.user.username }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
+        </div>
+        {% if g.user['id'] == post['author_id'] %}
+        <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+        {% endif %}
+    </header>
+    <p class="body">{{ post['body'] }}</p>
+    <hr>
+    <span>
+        <span class="thumb" id="like-button-{{ post['id'] }}" onclick="like( {{ post['id'] }} )">
+            {% if g.user['id'] in post.likes|map(attribute='author_id') %}
+                &#128078;
+            {% else %}
+                &#128077;
+            {% endif %}
+        </span>
+        <span class="modal-trigger" onclick="getLikers( {{ post['id'] }} )">Likes</span><span>: </span>
+        <span id="like-count-{{ post['id'] }}" value="{{ post.likes|length }}">{{ post.likes|length }}</span>
+        
+        <div class="modal" id="modal-{{ post['id'] }}">
+            <span<p>Users who likes Post# {{ post['id'] }}</span>
+            <span onclick="hideModal( {{ post['id'] }} )" class="close">&times;</span>
+            <hr>
+            <div class="modal-content">        
+                <ul>
+                    {% for like in post.likes %}
+                    <li>{{ like.user.username }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </span>
+</article>

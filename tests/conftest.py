@@ -10,7 +10,7 @@ import pytest
 
 from flaskr import create_app
 from flaskr.extensions import db
-from flaskr.models import User, Post
+from flaskr.models import User, Post, Like
 
 
 @pytest.fixture(scope="module") # This fixture is destroyed during teardown of the last test in the "module".
@@ -41,6 +41,8 @@ def database():
     user.save()
     post = Post(title='test title', body='test\nbody', author_id=1)
     post.save()
+    like = Like(post_id=1, author_id=2)
+    like.save()
     ##################################################################
     yield db
     # Drop on teardown.
