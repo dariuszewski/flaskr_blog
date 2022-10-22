@@ -136,6 +136,10 @@ input[type=submit] {
     min-width: 10em;
 }
 
-i {
-    color: #377ba8;
+.thumb {
+    font-size: 1.25rem;
+}
+
+.thumb:hover {
+    cursor: pointer;
 }

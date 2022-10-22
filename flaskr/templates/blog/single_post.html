@@ -11,8 +11,13 @@
     <p class="body">{{ post['body'] }}</p>
     <hr>
     <span>
-
-        <i class="fa-regular fa-thumbs-up" id="like-button-{{ post['id'] }}" onclick="like( {{ post['id'] }} )"></i>
+        <span class="thumb" id="like-button-{{ post['id'] }}" onclick="like( {{ post['id'] }} )">
+            {% if g.user['id'] in post.likes|map(attribute='author_id') %}
+                &#128078;
+            {% else %}
+                &#128077;
+            {% endif %}
+        </span>
 
         Likes: <span id="like-count-{{ post['id'] }}" value="{{ post.likes|length }}">{{ post.likes|length }}</span>
         <!-- {% for like in post.likes %}

@@ -106,7 +106,7 @@ def like_action(post_id):
         like = Like(post_id=post_id, author_id=g.user.id)
         like.save()
     like = Like.get_like_by_post_and_author(post_id=post_id, author_id=g.user.id)
-    print(like)
+
     return jsonify({
         "likes": len(post.likes),
         "liked": bool(like)
