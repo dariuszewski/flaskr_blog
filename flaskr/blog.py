@@ -111,3 +111,15 @@ def like_action(post_id):
         "likes": len(post.likes),
         "liked": bool(like)
     })
+
+
+@bp.route('/<int:post_id>/likers', methods=('GET',))
+def likers_action(post_id):
+    
+    # Check if post exists.
+    post = get_post(post_id, check_author=False)
+
+    # Return amount of likes.
+    return jsonify({
+        "likers_count": len(post.likes)
+    })

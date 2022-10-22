@@ -18,12 +18,20 @@
                 &#128077;
             {% endif %}
         </span>
-
-        Likes: <span id="like-count-{{ post['id'] }}" value="{{ post.likes|length }}">{{ post.likes|length }}</span>
-        <!-- {% for like in post.likes %}
-            {{ like.user.username }}
-        {% endfor %}
-        and {{ post.likes|length - 2 }} other
-        likes this -->
+        <span class="modal-trigger" onclick="getLikers( {{ post['id'] }} )">Likes</span><span>: </span>
+        <span id="like-count-{{ post['id'] }}" value="{{ post.likes|length }}">{{ post.likes|length }}</span>
+        
+        <div class="modal" id="modal-{{ post['id'] }}">
+            <span<p>Users who likes Post# {{ post['id'] }}</span>
+            <span onclick="hideModal( {{ post['id'] }} )" class="close">&times;</span>
+            <hr>
+            <div class="modal-content">        
+                <ul>
+                    {% for like in post.likes %}
+                    <li>{{ like.user.username }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
     </span>
 </article>

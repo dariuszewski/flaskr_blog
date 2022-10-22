@@ -141,5 +141,29 @@ input[type=submit] {
 }
 
 .thumb:hover {
+    font-size: 1.25rem;
     cursor: pointer;
+}
+
+.modal {
+    margin: 1em 0;
+    padding: 1em;
+    background: #cae6f6;
+    border: 1px solid #377ba8;
+    display: none;
+}
+
+.close {
+    float: right;
+    font-weight: bold;
+  }
+
+.close:hover {
+    cursor: pointer;
+}
+
+.modal-trigger:hover {
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
 }

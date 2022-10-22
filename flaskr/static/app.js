@@ -15,3 +15,27 @@ function like(postId) {
     })
     .catch((e) => alert("Could not like post."));
 }
+
+
+function getLikers(postId) {
+
+    const likersModal = document.getElementById(`modal-${postId}`);
+
+    fetch(`/${postId}/likers`, { method: "GET" })
+    .then((res) => res.json())
+    .then((data) => {
+        if (data['likers_count'] > 0) {
+            likersModal.style.display = "block";
+        }  
+        else {
+            alert("Nobody likes this yet...");
+        }
+    })
+    .catch((e) => alert("Could not display who likes the post."));
+}
+
+
+function hideModal(postId) {
+    const likersModal = document.getElementById(`modal-${postId}`);
+    likersModal.style.display = "none";
+}
