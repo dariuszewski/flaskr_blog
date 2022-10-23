@@ -118,8 +118,10 @@ def likers_action(post_id):
     
     # Check if post exists.
     post = get_post(post_id, check_author=False)
+    likers = [like.user.username for like in post.likes]
 
     # Return amount of likes.
     return jsonify({
-        "likers_count": len(post.likes)
+        "likers_count": len(post.likes),
+        "likers": likers
     })

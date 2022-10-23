@@ -20,12 +20,19 @@ function like(postId) {
 function getLikers(postId) {
 
     const likersModal = document.getElementById(`modal-${postId}`);
+    const modalContent = document.getElementById(`modal-content-${postId}`);
 
     fetch(`/${postId}/likers`, { method: "GET" })
     .then((res) => res.json())
     .then((data) => {
         if (data['likers_count'] > 0) {
+            var outputString = '<ul>';
+            for (liker of data['likers']) {
+                outputString = outputString + '<li>' + liker + '</li>'
+            };
+            outputString += '</ul>';
             likersModal.style.display = "block";
+            modalContent.innerHTML = outputString;
         }  
         else {
             alert("Nobody likes this yet...");
