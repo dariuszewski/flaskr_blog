@@ -3,7 +3,7 @@
 import pytest
 from flask import g, session
 
-from flaskr.models import User
+from flaskr.models.user import User
 
 # Passing database to test allows usage even if its not used within a function/
 def test_register(client):

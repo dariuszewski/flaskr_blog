@@ -2,7 +2,7 @@
 
 import pytest
 
-from flaskr.models import Post
+from flaskr.models.post import Post
 
 
 def test_index(client, auth, database):

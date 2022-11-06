@@ -6,7 +6,7 @@ from flask import Flask
 # Application Factory Pattern. This can be called with flask run --app flaskr:create_app
 # App will expect to have $env:APP_SETTINGS variable which contains Config Object (ex. flaskr.config.DevelopmentConfig). 
 def create_app(test_config=None):
-    # Create and configure the app.
+    # Create and configure the app. Run with flask --app flaskr --debug run
     app = Flask(__name__, instance_relative_config=True)
     # The instance folder is designed to not be under version control and be deployment specific. 
     # It’s the perfect place to drop things that either change at runtime or configuration files.
@@ -35,7 +35,9 @@ def create_app(test_config=None):
     # Create the database tables in the app context (since no request is available at this stage).
     # This doesn't update existing tables (use Alembic to do that).
     with app.app_context():
-        from flaskr.models import User, Post, Like
+        from flaskr.models.user import User
+        from flaskr.models.post import Post
+        from flaskr.models.like import Like
         db.create_all()
 
     # register blueprints
