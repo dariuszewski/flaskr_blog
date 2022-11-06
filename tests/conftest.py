@@ -10,7 +10,9 @@ import pytest
 
 from flaskr import create_app
 from flaskr.extensions import db
-from flaskr.models import User, Post, Like
+from flaskr.models.user import User
+from flaskr.models.post import Post
+from flaskr.models.like import Like
 
 
 @pytest.fixture(scope="module") # This fixture is destroyed during teardown of the last test in the "module".

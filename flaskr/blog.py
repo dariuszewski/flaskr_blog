@@ -4,7 +4,8 @@ from flask import (
 from werkzeug.exceptions import abort
 
 from flaskr.auth import login_required
-from flaskr.models import Post, Like, User
+from flaskr.models.post import Post
+from flaskr.models.like import Like
 from flaskr.extensions import db
 
 
