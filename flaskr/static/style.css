@@ -183,3 +183,6 @@ input[type=submit] {
     text-decoration: underline;
 }
 
+.comment-card {
+    padding: 2px;
+}
