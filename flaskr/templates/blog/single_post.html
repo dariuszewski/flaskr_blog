@@ -10,7 +10,7 @@
     </header>
     <p class="body">{{ post['body'] }}</p>
     <hr>
-    <span>
+    <div class="post-footer">
         <span class="thumb" id="like-button-{{ post['id'] }}" onclick="like( {{ post['id'] }} )">
             {% if g.user['id'] in post.likes|map(attribute='author_id') %}
                 &#128078;
@@ -20,7 +20,13 @@
         </span>
         <span class="modal-trigger" onclick="getLikers( {{ post['id'] }} )">Likes</span><span>: </span>
         <span id="like-count-{{ post['id'] }}" value="{{ post.likes|length }}">{{ post.likes|length }}</span>
+        <br>
+        <span class="comment-section">
+            <span class="comment-icon">&#128264;</span>
+            <span class="comment-section-trigger">Comments<span>: </span></span>0
+            <!-- <span id="comment-count-{{ post['id'] }}" value="{{ post.likes|length }}">{{ post.likes|length }}</span> -->
+        </span>
         
         {% include 'blog/likers_modal.html' %}
-    </span>
+    </div>
 </article>

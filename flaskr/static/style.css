@@ -140,7 +140,16 @@ input[type=submit] {
     font-size: 1.25rem;
 }
 
+.comment-icon {
+    font-size: 1.25rem;
+}
+
 .thumb:hover {
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+.comment-icon:hover {
     font-size: 1.25rem;
     cursor: pointer;
 }
@@ -167,3 +176,10 @@ input[type=submit] {
     font-weight: bold;
     text-decoration: underline;
 }
+
+.comment-section-trigger:hover {
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
