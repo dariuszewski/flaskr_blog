@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% from 'macros.html' import comment_section %}
 {% block header %}
 <h1>{% block title %}Post #{{ post['id'] }}{% endblock %}</h1>
 {% endblock %}
@@ -22,10 +22,7 @@
     <p>i do have comments</p>
     {% for comment in post.comments %}
       {% if comment.parent_id == None %}
-      <p>{{ comment.user.username }}</p>
-      <!-- COMMENTS STARTS HERE -->
-      <!-- COMMENTS ENDS HERE -->
-        {% include 'blog/comment_section.html' %}
+        {{ comment_section(comment) }}
       {% endif %}
     {% endfor %}
   {% else %}
@@ -34,5 +31,4 @@
       No comments yet...
     </div>
   {% endif %}
-  {% include 'blog/comment_section.html' %}
 {% endblock %}
