@@ -32,6 +32,8 @@ def read(id):
 
     if request.method == 'POST':
         body = request.form['body']
+        parent = Comment.get_comment_by_id(id=request.form['parent_id'])
+
         error = None
 
         if not body:
@@ -43,7 +45,7 @@ def read(id):
         if not g.user:
             abort(403)
 
-        comment = Comment(body=body, author_id=g.user.id, post_id=post.id)
+        comment = Comment(body=body, author_id=g.user.id, post_id=post.id, parent=parent)
         comment.save()
         flash('Your comment has been added.')
 

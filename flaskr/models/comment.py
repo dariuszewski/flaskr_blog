@@ -18,22 +18,22 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"))
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
-    parent = db.relationship('Comment', remote_side=[id])
+    replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[id]), lazy='dynamic')
     user = db.relationship('User', back_populates="comments", passive_deletes=True)
     post = db.relationship('Post', back_populates="comments", passive_deletes=True)
+
+
+    @staticmethod
+    def get_comment_by_id(id):
+        return db.session.execute(db
+            .select(Comment)
+            .filter_by(id=id)).scalar()
 
     @staticmethod
     def get_comments_by_post(post_id):
         return db.session.execute(db
             .select(Comment)
             .filter_by(post_id=post_id)).all()
-    
-    @staticmethod
-    def get_child_comments(post_id):
-        return db.session.execute(db
-            .select(Comment)
-            .filter_by(parent_id=post_id)
-            .order_by(Comment.created)).scalars()
 
     def save(self):
         db.session.add(self)

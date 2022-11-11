@@ -18,10 +18,14 @@
                     <span onclick="hideCommentForm( {{ comment['id'] }} )" class="close">&times;</span>
                     <form method="post">
                         <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+                        <input type="number" class='default_comment_id' name="parent_id" id="parent_id" value="{{ comment.id }}">
                         <input type="submit" value="Save">
                     </form>
                 </div>
             </div>
+            {% for reply in comment.replies %}
+                {{ comment_section(reply) }}
+            {% endfor %}
         </div>
     </div>
 {% endmacro %}
