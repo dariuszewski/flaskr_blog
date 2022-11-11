@@ -1,7 +1,7 @@
-<div class="comment-section-header">
+<!-- <div class="comment-section-header">
     <h3>Comment Section</h3> <span onclick="openCommentForm(11)">Reply</span>
-</div>
-<div class="comment-form" id="comment-form-11">
+</div> -->
+<!-- <div class="comment-form" id="comment-form-11">
     <hr>                
     <span class="comment-form-header">Your comment</span>
     <span onclick="hideCommentForm(11)" class="close">&times;</span>
@@ -9,12 +9,13 @@
         <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
         <input type="submit" value="Save">
     </form>
-</div>
+</div> -->
 <div class="container">
     <div class="comment-container">
         <div class="comment-card">
             <div class="comment-header">
                 <div class="about">by USER! on 2022-01-01</div>
+                <div class="about">by {{ comment }} on 2022-01-01</div>
             </div>
             <div class="comment-body">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, deserunt!

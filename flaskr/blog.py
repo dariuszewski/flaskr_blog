@@ -23,13 +23,19 @@ def index():
 def read(id):
     # Checks if post exists.
     post = get_post(id, check_author=False)
+    # print(post.comments[0])
+    # print(post.comments[0].id)
+    # print(post.comments[0].body)
+    # print(post.comments[0].author_id)
+    # print(post.comments[0].post_id)
+    # print(post.comments[0].parent_id)
 
     if request.method == 'POST':
         body = request.form['body']
         error = None
 
         if not body:
-            error = 'Title is required.'
+            error = 'Body is required.'
 
         if error is not None:
             flash(error)

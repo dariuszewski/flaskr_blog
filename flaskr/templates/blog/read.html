@@ -6,5 +6,33 @@
 
 {% block content %}
   {% include 'blog/single_post.html' %}
+  <div class="comment-section-header">
+    <h3>Comment Section</h3> <span onclick="openCommentForm(0)">Reply</span>
+    <div class="comment-form" id="comment-form-0">
+      <hr>                
+      <span class="comment-form-header">Your comment</span>
+      <span onclick="hideCommentForm(0)" class="close">&times;</span>
+      <form method="post">
+          <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+          <input type="submit" value="Save">
+      </form>
+    </div>
+  </div>
+  {% if post.comments %}
+    <p>i do have comments</p>
+    {% for comment in post.comments %}
+      {% if comment.parent_id == None %}
+      <p>{{ comment.user.username }}</p>
+      <!-- COMMENTS STARTS HERE -->
+      <!-- COMMENTS ENDS HERE -->
+        {% include 'blog/comment_section.html' %}
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    <br>
+    <div class="comment-card">
+      No comments yet...
+    </div>
+  {% endif %}
   {% include 'blog/comment_section.html' %}
 {% endblock %}
