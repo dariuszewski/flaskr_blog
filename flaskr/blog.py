@@ -6,22 +6,41 @@ from werkzeug.exceptions import abort
 from flaskr.auth import login_required
 from flaskr.models.post import Post
 from flaskr.models.like import Like
+from flaskr.models.comment import Comment
 from flaskr.extensions import db
 
 
 bp = Blueprint('blog', __name__)
 
 
-@bp.route('/')
-def index(methods=('GET',)):
+@bp.route('/', methods=('GET',))
+def index():
     posts = Post.get_all()
     return render_template('blog/index.html', posts=posts)
 
 
-@bp.route('/<int:id>/read', methods=('GET',))
+@bp.route('/<int:id>/read', methods=('GET', 'POST'))
 def read(id):
     # Checks if post exists.
     post = get_post(id, check_author=False)
+
+    if request.method == 'POST':
+        body = request.form['body']
+        error = None
+
+        if not body:
+            error = 'Title is required.'
+
+        if error is not None:
+            flash(error)
+
+        if not g.user:
+            abort(403)
+
+        comment = Comment(body=body, author_id=g.user.id, post_id=post.id)
+        comment.save()
+        flash('Your comment has been added.')
+
     # Returns post with author id.
     return render_template('blog/read.html', post=post)
 

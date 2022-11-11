@@ -46,3 +46,13 @@ function hideModal(postId) {
     const likersModal = document.getElementById(`modal-${postId}`);
     likersModal.style.display = "none";
 }
+
+function openCommentForm(commentFormId) {
+    const commentForm = document.getElementById(`comment-form-${commentFormId}`);
+    commentForm.style.display = "block";
+}
+
+function hideCommentForm(commentFormId) {
+    const commentForm = document.getElementById(`comment-form-${commentFormId}`);
+    commentForm.style.display = "none";
+}

@@ -19,6 +19,7 @@ class Post(db.Model):
 
     user = db.relationship('User', back_populates="posts")
     likes = db.relationship('Like', back_populates="post", passive_deletes=True)
+    comments = db.relationship('Comment', back_populates='post', passive_deletes=True)
 
     @staticmethod
     def get_all():

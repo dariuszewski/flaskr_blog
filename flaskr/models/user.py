@@ -16,6 +16,7 @@ class User(db.Model):
 
     posts = db.relationship("Post", back_populates='user')
     likes = db.relationship('Like', back_populates='user', passive_deletes=True)
+    comments = db.relationship('Comment', back_populates='user', passive_deletes=True)
 
 
     @staticmethod
