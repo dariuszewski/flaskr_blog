@@ -10,6 +10,7 @@ from flaskr.extensions import db
 
 class Comment(db.Model):
     __tablename__ = 'comment'
+    __mapper_args__ = {'confirm_deleted_rows': False}
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(2000))
     created = db.Column(db.DateTime(timezone=True), server_default=db.func.now()) 
@@ -39,11 +40,10 @@ class Comment(db.Model):
     def recursive_delete(parent):
         children = Comment.get_comments_by_parent_id(parent.id)
         children = [child for child in children]
-        if children is not None:
-            for child in children:
-                Comment.recursive_delete(child)
-                db.session.delete(child)
-                db.session.commit()
+        for child in children:
+            Comment.recursive_delete(child)
+            db.session.delete(child)
+            db.session.commit()
         db.session.delete(parent)
         db.session.commit()
 
