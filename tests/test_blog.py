@@ -3,6 +3,7 @@
 import pytest
 
 from flaskr.models.post import Post
+from flaskr.models.comment import Comment
 
 
 def test_index(client, auth, database):
@@ -145,5 +146,46 @@ def test_likers(client, auth, database):
     response = client.get('/1/likers')
     # Assert: '1' is returned in json object.
     assert '1' in str(response.data)
+
+
+def test_comment_not_logged_in(client, database):
+    # Given: No user logged in.
+    # When: Single post page.
+    response = client.get('/1/read')
+    # Assert: No comments added yet.
+    assert b'No comments yet...' in response.data
+    
+    # When: Adding new comment at the root level.
+    response = client.post('/1/read', 
+        data={'body': 'test1', 'parent_id': -1})
+    # Assert: Not logged in user can't add a comment.
+    assert response.status_code == 403
+
+
+def test_comment(client, auth, database):
+    # Given: No user logged in.
+    auth.login()    
+    # When: Single post page.
+    response = client.get('/1/read')
+    # Assert: No comments added yet.
+    assert b'No comments yet...' in response.data
+
+    #When: Adding top-level comment with no body.
+    response = client.post('/1/read', 
+        data={'body': '', 'parent_id': -1})
+    # Assert response.
+    assert b'Body is required.' in response.data
+
+    #When: Adding comment top-level with body.
+    response = client.post('/1/read', 
+        data={'body': 'Top level comment.', 'parent_id': -1})
+    # Assert response.
+    assert b'Your comment has been added.' in response.data
+
+    #When: Adding comment below top-level with body.
+    response = client.post('/1/read', 
+        data={'body': 'Top level comment.', 'parent_id': 1})
+    # Assert response.
+    assert b'Your comment has been added.' in response.data
 
 

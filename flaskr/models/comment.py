@@ -28,13 +28,7 @@ class Comment(db.Model):
         return db.session.execute(db
             .select(Comment)
             .filter_by(id=id)).scalar()
-
-    @staticmethod
-    def get_comments_by_post(post_id):
-        return db.session.execute(db
-            .select(Comment)
-            .filter_by(post_id=post_id)).all()
-
+            
     def save(self):
         db.session.add(self)
         db.session.commit()
