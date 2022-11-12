@@ -190,6 +190,7 @@ def test_comment(client, auth, database):
     assert b'Your comment has been added.' in response.data
 
 
+
 def test_comment_deletion(client, auth, database):
     # Given
     auth.login()
@@ -237,3 +238,4 @@ def test_recursive_delete(client, auth, database):
     response = client.get('/1/read')
     # Assert
     assert b'No comments yet...' in response.data
+

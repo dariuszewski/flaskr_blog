@@ -11,6 +11,7 @@ from flaskr.extensions import db
 class Comment(db.Model):
     __tablename__ = 'comment'
     __mapper_args__ = {'confirm_deleted_rows': False}
+
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(2000))
     created = db.Column(db.DateTime(timezone=True), server_default=db.func.now()) 
@@ -29,7 +30,7 @@ class Comment(db.Model):
         return db.session.execute(db
             .select(Comment)
             .filter_by(id=id)).scalar()
-    
+
     @staticmethod
     def get_comments_by_parent_id(parent_id):
         return db.session.execute(db
@@ -46,6 +47,7 @@ class Comment(db.Model):
             db.session.commit()
         db.session.delete(parent)
         db.session.commit()
+
 
     def save(self):
         db.session.add(self)

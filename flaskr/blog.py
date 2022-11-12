@@ -19,13 +19,16 @@ def index():
     return render_template('blog/index.html', posts=posts)
 
 
+
 @bp.route('/<int:id>/read', methods=('GET', 'POST', 'DELETE'))
 def read(id, comment_id=None):
+
     # Checks if post exists.
     post = get_post(id, check_author=False)
 
     if request.method == 'POST':
         # Create comment.
+
         body = request.form['body']
         parent = Comment.get_comment_by_id(id=request.form['parent_id'])
 
