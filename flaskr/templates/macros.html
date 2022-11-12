@@ -1,0 +1,30 @@
+{% macro comment_section(comment) %}
+    <div class="container">
+        <div class="comment-container">
+            <div class="comment-card">
+                <div class="comment-header">
+                    <div class="about">by {{ comment.user.username }} on {{ comment.created }}</div>
+                </div>
+                <div class="comment-body">
+                    {{ comment.body }}
+                </div>
+                <div class="comment-footer">
+                    <div class="reply-trigger" onclick="openCommentForm( {{ comment['id'] }} )">Reply</div>
+                </div>
+                <div class="comment-form" id="comment-form-{{ comment.id }}">
+                    <hr>                
+                    <span class="comment-form-header">Your comment</span>
+                    <span onclick="hideCommentForm( {{ comment['id'] }} )" class="close">&times;</span>
+                    <form method="post">
+                        <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+                        <input type="number" class='default_comment_id' name="parent_id" id="parent_id" value="{{ comment.id }}">
+                        <input type="submit" value="Save">
+                    </form>
+                </div>
+            </div>
+            {% for reply in comment.replies %}
+                {{ comment_section(reply) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}

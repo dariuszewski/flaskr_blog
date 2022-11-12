@@ -23,10 +23,13 @@
         <br>
         <span class="comment-section">
             <span class="comment-icon">&#128264;</span>
-            <span class="comment-section-trigger">Comments<span>: </span></span>0
-            <!-- <span id="comment-count-{{ post['id'] }}" value="{{ post.likes|length }}">{{ post.likes|length }}</span> -->
+            <span class="comment-section-trigger">
+                <a href="{{ url_for('blog.read', id=post['id']) }}">Comments</a>
+            </span>
+            <span>: </span>
+            <span id="comment-count-{{ post['id'] }}" value="{{ post.comments|length }}">{{ post.comments|length }}</span>
         </span>
-        
         {% include 'blog/likers_modal.html' %}
+    <hr>
     </div>
 </article>

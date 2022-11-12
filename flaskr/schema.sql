@@ -23,3 +23,11 @@ CREATE TABLE likes (
   FOREIGN KEY (post_id) REFERENCES user (id) ON DELETE CASCADE
   FOREIGN KEY (author_id) REFERENCES user (id)
 );
+CREATE TABLE comment (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  body TEXT NOT NULL,
+  post_id INTEGER NOT NULL,
+  author_id INTEGER NOT NULL,
+  FOREIGN KEY (post_id) REFERENCES user (id) ON DELETE CASCADE
+  FOREIGN KEY (author_id) REFERENCES user (id)
+);

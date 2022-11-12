@@ -1,12 +1,34 @@
 {% extends 'base.html' %}
-
+{% from 'macros.html' import comment_section %}
 {% block header %}
 <h1>{% block title %}Post #{{ post['id'] }}{% endblock %}</h1>
-{% if g.user %}
-<!-- <a class="action" href="{{ url_for('blog.create') }}">New</a> -->
-{% endif %}
 {% endblock %}
 
 {% block content %}
   {% include 'blog/single_post.html' %}
+  <div class="comment-section-header">
+    <h3>Comment Section</h3> <span onclick="openCommentForm(0)">Reply</span> </div>
+    <div class="comment-form" id="comment-form-0">
+      <hr>                
+      <span class="comment-form-header">Your comment</span>
+      <span onclick="hideCommentForm(0)" class="close">&times;</span>
+      <form method="post">
+          <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+          <input class='default_comment_id' type="number" name="parent_id" id="parent_id" value="{{ -1 }}">
+          <input type="submit" value="Save">
+      </form>
+    </div>
+  </div>
+  {% if post.comments %}
+    {% for comment in post.comments %}
+      {% if comment.parent_id == None %}
+        {{ comment_section(comment) }}
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    <br>
+    <div class="comment-card">
+      No comments yet...
+    </div>
+  {% endif %}
 {% endblock %}
