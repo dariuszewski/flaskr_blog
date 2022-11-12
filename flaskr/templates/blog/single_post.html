@@ -27,7 +27,7 @@
                 <a href="{{ url_for('blog.read', id=post['id']) }}">Comments</a>
             </span>
             <span>: </span>
-            <span id="comment-count-{{ post['id'] }}" value="{{ post.comments|length }}">{{ post.likes|length }}</span>
+            <span id="comment-count-{{ post['id'] }}" value="{{ post.comments|length }}">{{ post.comments|length }}</span>
         </span>
         {% include 'blog/likers_modal.html' %}
     <hr>
