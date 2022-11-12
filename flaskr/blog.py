@@ -19,12 +19,16 @@ def index():
     return render_template('blog/index.html', posts=posts)
 
 
-@bp.route('/<int:id>/read', methods=('GET', 'POST'))
-def read(id):
+
+@bp.route('/<int:id>/read', methods=('GET', 'POST', 'DELETE'))
+def read(id, comment_id=None):
+
     # Checks if post exists.
     post = get_post(id, check_author=False)
 
     if request.method == 'POST':
+        # Create comment.
+
         body = request.form['body']
         parent = Comment.get_comment_by_id(id=request.form['parent_id'])
 
@@ -44,9 +48,20 @@ def read(id):
             comment.save()
             flash('Your comment has been added.')
 
-    # Returns post with author id.
     return render_template('blog/read.html', post=post)
 
+
+@bp.route('/<int:id>/delete_comment', methods=('GET',))
+@login_required
+def delete_comment(id):
+    # This will delete a comment with all it's subcomments!
+
+    post_id = request.args.get('post_id')
+
+    comment = get_comment(id)
+    Comment.recursive_delete(comment)
+
+    return redirect(url_for('blog.read', id=post_id))
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
@@ -81,6 +96,18 @@ def get_post(id, check_author=True):
         abort(403)
 
     return post
+
+def get_comment(id, check_author=True):
+    # get_comment is used by update and delete routes.
+    comment = Comment.get_comment_by_id(id)
+
+    if comment is None:
+        abort(404, f"Comment id {id} doesn't exist.")
+
+    if check_author and comment.author_id != g.user.id:
+        abort(403)
+
+    return comment  
 
 
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))

@@ -5,6 +5,7 @@ import pytest
 from flaskr.models.post import Post
 from flaskr.models.comment import Comment
 
+from flaskr.blog import get_comment
 
 def test_index(client, auth, database):
     # Given: user is not logged in.
@@ -188,4 +189,53 @@ def test_comment(client, auth, database):
     # Assert response.
     assert b'Your comment has been added.' in response.data
 
+
+
+def test_comment_deletion(client, auth, database):
+    # Given
+    auth.login()
+    client.post('/1/read', 
+        data={'body': 'top level', 'parent_id': -1})
+    client.post('/1/read', 
+        data={'body': '2nd level', 'parent_id': 1})
+    client.post('/1/read', 
+        data={'body': '3rd level', 'parent_id': 2})
+
+    auth.logout()
+    auth.login(username='other', password='test')
+
+    # When: Not owner of comment tries to delete.
+    response = client.get('/1/delete_comment?post_id=1')
+    # Then
+    assert response.status_code == 403
+
+    # When owner tries to delete comment.
+    auth.logout()
+    auth.login()
+    client.get('/1/delete_comment?post_id=1')
+    response = client.get('/1/read')
+
+    # Assert
+    assert b'No comments yet...' in response.data
+
+    # Assert when trying to delete non existing comment
+    assert client.get('/1/delete_comment?post_id=1').status_code == 404 
+    
+
+def test_recursive_delete(client, auth, database):
+        # Given
+    auth.login()
+    client.post('/1/read', 
+        data={'body': 'top level', 'parent_id': -1})
+    client.post('/1/read', 
+        data={'body': '2nd level', 'parent_id': 1})
+    client.post('/1/read', 
+        data={'body': '3rd level', 'parent_id': 2})
+
+    # When
+    comment = Comment.get_comment_by_id(1)
+    Comment.recursive_delete(comment)
+    response = client.get('/1/read')
+    # Assert
+    assert b'No comments yet...' in response.data
 

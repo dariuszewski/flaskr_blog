@@ -271,3 +271,14 @@ input[type=submit] {
 .default_comment_id {
     display: none;
 }
+
+
+.delete-comment a {
+    text-decoration: none;
+    color: #ff0000;
+}
+
+.delete-comment a:hover {
+    text-decoration: underline;
+    color: #ff0000;
+}
