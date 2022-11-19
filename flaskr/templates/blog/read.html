@@ -15,7 +15,7 @@
       <form method="post">
           <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
           <input class='default_comment_id' type="number" name="parent_id" id="parent_id" value="{{ -1 }}">
-          <input type="submit" value="Save">
+          <input name='reply' type="submit" value="Save">
       </form>
     </div>
   </div>

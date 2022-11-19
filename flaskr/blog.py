@@ -20,7 +20,7 @@ def index():
 
 
 
-@bp.route('/<int:id>/read', methods=('GET', 'POST', 'DELETE'))
+@bp.route('/<int:id>/read', methods=('GET', 'POST'))
 def read(id, comment_id=None):
 
     # Checks if post exists.
@@ -44,9 +44,15 @@ def read(id, comment_id=None):
             flash(error)
 
         else:
-            comment = Comment(body=body, author_id=g.user.id, post_id=post.id, parent=parent)
-            comment.save()
-            flash('Your comment has been added.')
+            if 'reply' in request.form:
+                comment = Comment(body=body, author_id=g.user.id, post_id=post.id, parent=parent)
+                comment.save()
+                flash('Your comment has been added.')
+            if 'edit' in request.form:
+                comment = parent
+                comment.body = body
+                comment.save()
+                flash('Your comment has been edited.')
 
     return render_template('blog/read.html', post=post)
 

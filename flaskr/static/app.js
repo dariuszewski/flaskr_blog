@@ -50,9 +50,23 @@ function hideModal(postId) {
 function openCommentForm(commentFormId) {
     const commentForm = document.getElementById(`comment-form-${commentFormId}`);
     commentForm.style.display = "block";
+    const commentEditForm = document.getElementById(`comment-edit-form-${commentFormId}`);
+    commentEditForm.style.display = "none";
 }
 
 function hideCommentForm(commentFormId) {
     const commentForm = document.getElementById(`comment-form-${commentFormId}`);
     commentForm.style.display = "none";
+}
+
+function openCommentEditForm(commentFormId) {
+    const commentEditForm = document.getElementById(`comment-edit-form-${commentFormId}`);
+    commentEditForm.style.display = "block";
+    const commentForm = document.getElementById(`comment-form-${commentFormId}`);
+    commentForm.style.display = "none";
+}
+
+function hideCommentEditForm(commentFormId) {
+    const commentEditForm = document.getElementById(`comment-edit-form-${commentFormId}`);
+    commentEditForm.style.display = "none";
 }

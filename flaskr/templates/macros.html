@@ -17,6 +17,10 @@
                         </a>
                     </div>
 
+                    <div class="reply-trigger" onclick="openCommentEditForm( {{ comment['id'] }} )">
+                            Edit
+                    </div>
+
                 </div>
                 <div class="comment-form" id="comment-form-{{ comment.id }}">
                     <hr>                
@@ -25,7 +29,17 @@
                     <form method="post">
                         <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
                         <input type="number" class='default_comment_id' name="parent_id" id="parent_id" value="{{ comment.id }}">
-                        <input type="submit" value="Save">
+                        <input name='reply' type="submit" value="Save">
+                    </form>
+                </div>
+                <div class="comment-edit-form" id="comment-edit-form-{{ comment.id }}">
+                    <hr>                
+                    <span class="comment-form-header">Edit comment</span>
+                    <span onclick="hideCommentEditForm( {{ comment['id'] }} )" class="close">&times;</span>
+                    <form method="post">
+                        <textarea name="body" id="body">{{ request.form['body'] }}{{ comment.body }}</textarea>
+                        <input type="number" class='default_comment_id' name="parent_id" id="parent_id" value="{{ comment.id }}">
+                        <input name='edit' type="submit" value="Save">
                     </form>
                 </div>
             </div>

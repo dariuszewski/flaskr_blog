@@ -255,7 +255,7 @@ input[type=submit] {
     cursor: pointer;
 }
 
-.comment-form {
+.comment-form, .comment-edit-form {
     display: none;
 }
 
@@ -263,7 +263,7 @@ input[type=submit] {
     font-weight: bold;
 }
 
-.comment-form textarea {
+.comment-form textarea, .comment-edit-form textarea {
     min-height: 6em;
     resize: vertical;
 }
@@ -282,3 +282,4 @@ input[type=submit] {
     text-decoration: underline;
     color: #ff0000;
 }
+
