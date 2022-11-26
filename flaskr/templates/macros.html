@@ -10,16 +10,17 @@
                 </div>
                 <div class="comment-footer">
                     <div class="reply-trigger" onclick="openCommentForm( {{ comment['id'] }} )">Reply</div>
+                    {% if g.user['id'] == comment['author_id'] %}
+                        <div class="delete-comment">
+                            <a class="" href="{{ url_for('comment.delete_comment', id=comment['id'], post_id=comment['post_id']) }}">
+                                Delete
+                            </a>
+                        </div>
 
-                    <div class="delete-comment">
-                        <a class="" href="{{ url_for('blog.delete_comment', id=comment['id'], post_id=comment['post_id']) }}">
-                            Delete
-                        </a>
-                    </div>
-
-                    <div class="reply-trigger" onclick="openCommentEditForm( {{ comment['id'] }} )">
-                            Edit
-                    </div>
+                        <div class="reply-trigger" onclick="openCommentEditForm( {{ comment['id'] }} )">
+                                Edit
+                        </div>
+                    {% endif %}
 
                 </div>
                 <div class="comment-form" id="comment-form-{{ comment.id }}">

@@ -2,6 +2,10 @@
 # Pytest uses fixtures by matching their function names with the names of arguments in the test functions.
 # They are usually residing in conftest.py file.
 # They don't have to be explicitly used in the testing function, it is enought to pass them as parameters.
+# run oprions:
+## coverage run -m pytest
+## coverage html
+## pytest tests/
 
 import os
 import tempfile

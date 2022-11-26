@@ -42,12 +42,19 @@ def create_app(test_config=None):
         db.create_all()
 
     # register blueprints
-    from . import auth
+    from .blueprints import auth
     app.register_blueprint(auth.bp)
 
-    from . import blog
-    app.register_blueprint(blog.bp)
+    # from . import blog
+    # app.register_blueprint(blog.bp)
+    # app.add_url_rule('/', endpoint='index')
+
+    from .blueprints.blog import post, comment, like, index
+    app.register_blueprint(index.bp)
     app.add_url_rule('/', endpoint='index')
+    app.register_blueprint(post.bp)
+    app.register_blueprint(comment.bp)
+    app.register_blueprint(like.bp)
 
     # a simple page that says hello
     @app.route('/hello')

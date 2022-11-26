@@ -1,11 +1,11 @@
 <article class="post">
     <header>
         <div>
-            <h1><a href="{{ url_for('blog.read', id=post['id']) }}">{{ post['title'] }}</a></h1>
+            <h1><a href="{{ url_for('post.read', id=post['id']) }}">{{ post['title'] }}</a></h1>
             <div class="about">by {{ post.user.username }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
         </div>
         {% if g.user['id'] == post['author_id'] %}
-        <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+        <a class="action" href="{{ url_for('post.update', id=post['id']) }}">Edit</a>
         {% endif %}
     </header>
     <p class="body">{{ post['body'] }}</p>
@@ -24,7 +24,7 @@
         <span class="comment-section">
             <span class="comment-icon">&#128264;</span>
             <span class="comment-section-trigger">
-                <a href="{{ url_for('blog.read', id=post['id']) }}">Comments</a>
+                <a href="{{ url_for('post.read', id=post['id']) }}">Comments</a>
             </span>
             <span>: </span>
             <span id="comment-count-{{ post['id'] }}" value="{{ post.comments|length }}">{{ post.comments|length }}</span>

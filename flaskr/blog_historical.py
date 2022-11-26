@@ -49,7 +49,7 @@ def read(id, comment_id=None):
                 comment.save()
                 flash('Your comment has been added.')
             if 'edit' in request.form:
-                comment = parent
+                comment = get_comment(parent.id)
                 comment.body = body
                 comment.save()
                 flash('Your comment has been edited.')
