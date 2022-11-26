@@ -49,7 +49,11 @@ def create_app(test_config=None):
     # app.register_blueprint(blog.bp)
     # app.add_url_rule('/', endpoint='index')
 
-    from .blueprints.blog import post, comment, like, index
+    from .blueprints.blog import index
+    from .blueprints.blog import like
+    from .blueprints.blog import post
+    from .blueprints.blog import comment
+
     app.register_blueprint(index.bp)
     app.add_url_rule('/', endpoint='index')
     app.register_blueprint(post.bp)
