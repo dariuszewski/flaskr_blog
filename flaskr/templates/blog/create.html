@@ -10,6 +10,24 @@
     <input name="title" id="title" value="{{ request.form['title'] }}" required>
     <label for="body">Body</label>
     <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+    <span class="label-span">Tags</span>
+    <span>
+      <input name="tags" id="tags" placeholder="Add new tag..." value="{{ request.form['tags'] }}" required>
+      <span class="append-btn">+</span>
+    </span>
+    <span>Or pick some from here...</span>
+    {% for tag in tags %}
+    <span>
+      <span class="tag-pill">
+        {{ tag.body }}
+      </span>
+    </span>
+
+    {% endfor %}
+    <hr>
     <input type="submit" value="Save">
   </form>
+
 {% endblock %}
+
+<script src="../../static/create.js"></script>

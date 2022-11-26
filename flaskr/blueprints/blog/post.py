@@ -7,6 +7,7 @@ from flaskr.blueprints.auth import login_required
 from flaskr.blueprints.blog.comment import create_comment, update_comment
 from flaskr.models.post import Post
 from flaskr.models.comment import Comment
+from flaskr.models.tag import Tag
 from flaskr.extensions import db
 
 
@@ -50,6 +51,7 @@ def read(id, comment_id=None):
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
+    tags = Tag.get_all_tags()
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
@@ -65,7 +67,7 @@ def create():
             post.save()
             return redirect(url_for('index'))
 
-    return render_template('blog/create.html')
+    return render_template('blog/create.html', tags=tags)
 
 
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))

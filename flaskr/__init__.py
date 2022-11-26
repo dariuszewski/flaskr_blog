@@ -39,6 +39,8 @@ def create_app(test_config=None):
         from flaskr.models.post import Post
         from flaskr.models.like import Like
         from flaskr.models.comment import Comment
+        from flaskr.models.tag import Tag 
+        from flaskr.models.post_tag import post_tag
         db.create_all()
 
     # register blueprints

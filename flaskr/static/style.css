@@ -112,9 +112,10 @@ header .action {
     flex-direction: column;
 }
 
-.content label {
+.content label, .label-span {
     font-weight: bold;
     margin-bottom: 0.5em;
+    margin-right: 1px;
 }
 
 .content input,
@@ -283,3 +284,37 @@ input[type=submit] {
     color: #ff0000;
 }
 
+.tag-pill {
+    background-color: #ddd;
+    border: none;
+    color: black;
+    padding: 2px 4px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 2px;
+    cursor: pointer;
+    border-radius: 30%;
+    min-width: 50px;
+  }
+
+  .tag-pill:hover {
+    background-color: rgb(235, 235, 235);
+  }
+
+  .append-btn {
+    border-radius: 20%;
+    width: 20px;
+    height: 10px;
+    padding: 2px;
+    background: rgb(241, 75, 75);
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    /* font: 32px Arial, sans-serif; */
+  }
+
+  .append-btn:hover {
+    cursor: pointer;
+  }

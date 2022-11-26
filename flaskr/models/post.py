@@ -2,7 +2,7 @@ from os import stat
 from sqlalchemy import desc
 
 from flaskr.extensions import db
-
+from flaskr.models.post_tag import post_tag
 
 # SQLAlchemy automatically defines an __init__ method for each model that assigns 
 # any keyword arguments to corresponding database columns and other attributes.
@@ -20,6 +20,7 @@ class Post(db.Model):
     user = db.relationship('User', back_populates="posts")
     likes = db.relationship('Like', back_populates="post", passive_deletes=True)
     comments = db.relationship('Comment', back_populates='post', passive_deletes=True)
+    tags = db.relationship('Tag', secondary=post_tag, backref='tag')
 
     @staticmethod
     def get_all():
