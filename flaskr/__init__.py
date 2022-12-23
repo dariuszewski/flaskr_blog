@@ -3,7 +3,7 @@ import os
 from flask import Flask
 
 
-# Application Factory Pattern. This can be called with flask run --app flaskr:create_app
+# Application Factory Pattern. This can be called with flask --app flaskr --debug run
 # App will expect to have $env:APP_SETTINGS variable which contains Config Object (ex. flaskr.config.DevelopmentConfig). 
 def create_app(test_config=None):
     # Create and configure the app. Run with flask --app flaskr --debug run
