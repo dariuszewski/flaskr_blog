@@ -63,4 +63,18 @@ function tagToggle(tag) {
 
 function getTagByText(text) {
     return [...avaliableTags.children].filter(tag => tag.textContent == text)[0];
-}
+};
+
+
+document.getElementById("submit").addEventListener("click", function () {
+    let form = document.getElementById("form");
+    let formData = new FormData(form);
+    formData.append("tags", selectedTagsArray)
+    fetch("/create", {headers: {Cookie: 'SameSite=Lax'}}, {
+        method: "post",
+        body: formData
+    }).then(response => response.json())
+      .then(response => {
+        console.log(response["data"]);
+    });
+});

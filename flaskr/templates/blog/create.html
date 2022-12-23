@@ -5,14 +5,14 @@
 {% endblock %}
 
 {% block content %}
-  <form method="post">
+  <form onsubmit="return false;" id="form" novalidate>
     <label for="title">Title</label>
     <input name="title" id="title" value="{{ request.form['title'] }}" required>
     <label for="body">Body</label>
     <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
     <span class="label-span">Tags</span>
     <div>
-      <input name="tags" id="custom-tag" placeholder="Add new tag..." value="{{ request.form['tags'] }}">
+      <input id="custom-tag" placeholder="Add new tag...">
       <span class="append-btn">+</span>
     </div>
     <span>Click on tag to add it to post... </span>
@@ -21,7 +21,7 @@
         <span class="tag-pill not-selected">{{ tag.body }}</span>
       {% endfor %}
     </div>
-    <input type="submit" value="Save">
+    <input id="submit" type="submit" value="Save">
   </form>
 
   <script type="module"  src="{{ url_for('static', filename='create.js') }}"></script>

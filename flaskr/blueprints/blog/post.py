@@ -55,7 +55,9 @@ def create():
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
-        error = None
+        error = True
+
+        print(request.form)
 
         if not title:
             error = 'Title is required.'
