@@ -27,6 +27,13 @@ def test_index(client, auth, database):
     assert b'test1' in response.data
     assert b'href="/1/update"' in response.data
 
+def test_index_filter(client, auth, database):
+    auth.login()
+    client.post('/create', data={'title': 'Post1', 'body': 'Body1', 'tags': 'tag1'})
+    client.post('/create', data={'title': 'Post2', 'body': 'Body2', 'tags': 'tag2'})
+    response = client.get('/index?tag=tag2')
+    assert b'tag1' not in response.data
+    assert b'tag2' in response.data
 
 # Given:
 @pytest.mark.parametrize('path', (
@@ -79,9 +86,10 @@ def test_update(client, auth, database):
     auth.login()
     # Assert: User can upadate post with author_id=1.
     assert client.get('/1/update').status_code == 200
-    client.post('/1/update', data={'title': 'updated', 'body': 'updated', 'tags': 'created,updated'})
+    client.post('/1/update', data={'title': 'updated', 'body': 'updated', 'tags': 'updated'})
     # Assert post with id=1 have title 'updated'.
     assert Post.get_post_by_id(1).title == 'updated'
+    assert 'tag1' not in Post.get_post_by_id(1).tags
 
 
 @pytest.mark.parametrize(

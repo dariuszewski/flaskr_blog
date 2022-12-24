@@ -70,3 +70,11 @@ function hideCommentEditForm(commentFormId) {
     const commentEditForm = document.getElementById(`comment-edit-form-${commentFormId}`);
     commentEditForm.style.display = "none";
 }
+
+let alltags = document.querySelectorAll('.tag-pill-sm');
+
+alltags.forEach((tag) => {
+    tag.addEventListener('click', () => {
+        window.location.replace("/index?tag=" + tag.textContent);
+    })
+})
