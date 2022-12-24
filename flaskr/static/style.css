@@ -295,6 +295,17 @@ input[type=submit] {
     cursor: pointer;
   }
 
+  .tag-pill-sm {
+    padding: 2px 4px 1px 4px;
+    text-align: center;
+    min-width: 50px;
+    min-height: 20px;
+    border-radius: 40%;
+    display: inline-block;
+    margin: 0px 1px 2px 0px;
+    cursor: pointer;
+  }
+
 .not-selected {
     background-color: #ddd;
     border: solid rgb(170, 170, 170) 1px;

@@ -5,6 +5,8 @@ let selectedTagsArray = [];
 let createTagButton = document.querySelector('.append-btn');
 let customTagInput = document.getElementById('custom-tag');
 
+let tagsHiddenInput = document.getElementById('tags');
+ 
 
 [...avaliableTags.children].forEach(tag =>
     tag.addEventListener('click', () => {
@@ -50,6 +52,7 @@ function tagToggle(tag) {
             tag.classList.remove("not-selected");
             tag.classList.add("selected");
             selectedTagsArray.push(tag.textContent);
+            tagsHiddenInput.value = selectedTagsArray;
         }        
     }
     else {
@@ -58,6 +61,7 @@ function tagToggle(tag) {
         // remove tag from selected values.
         let indexOfTagToBeRemoved= selectedTagsArray.indexOf(tag.textContent);
         selectedTagsArray.splice(indexOfTagToBeRemoved, 1)
+        tagsHiddenInput.value = selectedTagsArray;
     };
 };
 
@@ -65,16 +69,3 @@ function getTagByText(text) {
     return [...avaliableTags.children].filter(tag => tag.textContent == text)[0];
 };
 
-
-document.getElementById("submit").addEventListener("click", function () {
-    let form = document.getElementById("form");
-    let formData = new FormData(form);
-    formData.append("tags", selectedTagsArray.join(','))
-    fetch("/create", {
-        method: "post",
-        body: formData
-    }).then(response => response.json())
-      .then(response => {
-        console.log(response["data"]);
-    });
-});

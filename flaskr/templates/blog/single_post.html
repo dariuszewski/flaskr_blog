@@ -9,6 +9,9 @@
         {% endif %}
     </header>
     <p class="body">{{ post['body'] }}</p>
+    {% for tag in post.tags %}
+        <span class="tag-pill-sm not-selected">{{ tag.body }}</span>
+    {% endfor %}
     <hr>
     <div class="post-footer">
         <span class="thumb" id="like-button-{{ post['id'] }}" onclick="like( {{ post['id'] }} )">

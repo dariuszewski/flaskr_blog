@@ -5,9 +5,10 @@
 {% endblock %}
 
 {% block content %}
-  <form onsubmit="return false;" id="form" novalidate>
+<!-- onsubmit="return false;" id="form" novalidate -->
+  <form method="post" > 
     <label for="title">Title</label>
-    <input name="title" id="title" value="{{ request.form['title'] }}" required>
+    <input name="title" id="title" value="{{ request.form['title'] }}">
     <label for="body">Body</label>
     <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
     <span class="label-span">Tags</span>
@@ -21,6 +22,7 @@
         <span class="tag-pill not-selected">{{ tag.body }}</span>
       {% endfor %}
     </div>
+    <input type="hidden" name="tags" id="tags">
     <input id="submit" type="submit" value="Save">
   </form>
 
