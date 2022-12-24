@@ -68,7 +68,7 @@ def test_create(client, auth, database):
     # Then: Can create a post.
     assert client.get('/create').status_code == 200
     # When: Posting data.
-    client.post('/create', data={'title': 'created', 'body': ''})
+    client.post('/create', data={'title': 'created', 'body': 'created', 'tags': 'created'})
     # Then: Title available in list of titles.
     assert 'created' in list(*zip(*database.session.execute(database.select(Post.title)).all()))
 
@@ -78,7 +78,7 @@ def test_update(client, auth, database):
     auth.login()
     # Assert: User can upadate post with author_id=1.
     assert client.get('/1/update').status_code == 200
-    client.post('/1/update', data={'title': 'updated', 'body': ''})
+    client.post('/1/update', data={'title': 'updated', 'body': 'updated', 'tags': 'created,updated'})
     # Assert post with id=1 have title 'updated'.
     assert Post.get_post_by_id(1).title == 'updated'
 
@@ -90,8 +90,8 @@ def test_update(client, auth, database):
 def test_create_update_validate(client, auth, path, database):
     # Test if validation of input works.
     auth.login()
-    response = client.post(path, data={'title': '', 'body': ''})
-    assert b'Title is required.' in response.data
+    response = client.post(path, data={'title': '', 'body': '', 'tags': ''})
+    assert b'At least 1 tag is required.' in response.data
 
 
 def test_delete(client, auth, app, database):
