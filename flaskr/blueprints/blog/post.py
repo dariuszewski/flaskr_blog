@@ -58,12 +58,12 @@ def create():
         tags = validate_tags(request.form['tags'])
         error = None
 
-        if not title:
-            error = 'Title is required.'
-        if not body:
-            error = 'Body is required.'
         if not tags:
             error = 'At least 1 tag is required.'
+        if not body:
+            error = 'Body is required.'
+        if not title:
+            error = 'Title is required.'
 
         if error is not None:
             flash(error)
@@ -92,12 +92,12 @@ def update(id):
         tags = validate_tags(request.form['tags'])
         error = None
 
-        if not title:
-            error = 'Title is required.'
-        if not body:
-            error = 'Body is required.'
         if not tags:
             error = 'At least 1 tag is required.'
+        if not body:
+            error = 'Body is required.'
+        if not title:
+            error = 'Title is required.'
 
         if error is not None:
             flash(error)

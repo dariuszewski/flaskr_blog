@@ -17,7 +17,7 @@ from flaskr.extensions import db
 from flaskr.models.user import User
 from flaskr.models.post import Post
 from flaskr.models.like import Like
-
+from flaskr.models.tag import Tag
 
 @pytest.fixture(scope="module") # This fixture is destroyed during teardown of the last test in the "module".
 def app():
@@ -46,6 +46,7 @@ def database():
     password='pbkdf2:sha256:260000$5nA3Qw0INBKctANp$d02abb7c77f46bf38708c97a0fb8b3067c5944e85f04fb2b8e31164cf9562d62')
     user.save()
     post = Post(title='test title', body='test\nbody', author_id=1)
+    post.tags = [Tag(body='test1')]
     post.save()
     like = Like(post_id=1, author_id=2)
     like.save()

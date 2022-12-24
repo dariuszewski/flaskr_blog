@@ -24,6 +24,7 @@ def test_index(client, auth, database):
     assert b'test title' in response.data
     assert b'by test on ' in response.data
     assert b'test\nbody' in response.data
+    assert b'test1' in response.data
     assert b'href="/1/update"' in response.data
 
 
@@ -83,15 +84,20 @@ def test_update(client, auth, database):
     assert Post.get_post_by_id(1).title == 'updated'
 
 
-@pytest.mark.parametrize('path', (
-    '/create',
-    '/1/update',
+@pytest.mark.parametrize(
+    ('path', 'title', 'body', 'tags','message'), (
+    ('/create','','','','Title is required.'),
+    ('/create','Title','','','Body is required.'),
+    ('/create','Title','Body','','At least 1 tag is required.'),
+    ('/1/update','','','','Title is required.'),
+    ('/1/update','Title','','','Body is required.'),
+    ('/1/update','Title','Body','','At least 1 tag is required.'),
 ))
-def test_create_update_validate(client, auth, path, database):
+def test_create_update_validate(client, auth, database, path, title, body, tags, message):
     # Test if validation of input works.
     auth.login()
-    response = client.post(path, data={'title': '', 'body': '', 'tags': ''})
-    assert b'At least 1 tag is required.' in response.data
+    response = client.post(path, data={'title': title, 'body': body, 'tags': tags})
+    assert bytes(message, encoding='utf-8') in response.data
 
 
 def test_delete(client, auth, app, database):
