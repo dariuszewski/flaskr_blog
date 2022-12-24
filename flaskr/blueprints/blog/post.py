@@ -53,7 +53,6 @@ def read(id, comment_id=None):
 def create():
     all_tags = Tag.get_all_tags()
     if request.method == 'POST':
-        print('I got a post request')
         title = request.form['title']
         body = request.form['body']
         tags = validate_tags(request.form['tags'])
@@ -69,15 +68,12 @@ def create():
         if error is not None:
             flash(error)
         else:
-            print('I have no errors')
             post = Post(title=title, body=body, author_id=g.user.id)
             create_missing_tags(tags, all_tags)
-            print("Missing tags created successfully!")
             current_post_tags = Tag.get_tags_by_bodies(tags)
             for tag in current_post_tags:
                 print(tag.body)
                 post.tags.append(tag)
-            print('Tags associated with post!')
             post.save()
             print(post.tags)
             return redirect(url_for('index'))
@@ -89,24 +85,34 @@ def create():
 @login_required
 def update(id):
     post = get_post(id)
-
+    all_tags = Tag.get_all_tags()
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
+        tags = validate_tags(request.form['tags'])
         error = None
 
         if not title:
             error = 'Title is required.'
+        if not body:
+            error = 'Body is required.'
+        if not tags:
+            error = 'At least 1 tag is required.'
 
         if error is not None:
             flash(error)
         else:
             post.title = title
             post.body = body
+            create_missing_tags(tags, all_tags) # add new tags to the database.
+            current_post_tags = Tag.get_tags_by_bodies(tags) # get tag objects with same body as selected.
+            post.tags = []
+            for tag in current_post_tags:
+                post.tags.append(tag)
             db.session.commit()
             return redirect(url_for('index'))
 
-    return render_template('blog/update.html', post=post)
+    return render_template('blog/update.html', post=post, all_tags=all_tags)
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))
@@ -137,17 +143,13 @@ def validate_tags(tagstream):
     if all(tags):
         tags = [tag.strip().lower() for tag in tags]
         tags = list(set(tags))
-        print('Validated Tags: ' + str(tags))
         return tags 
     else:
-        print('Validation failed')
         return False
 
 def create_missing_tags(tags, all_tags):
     all_tags_contents = [tag.body for tag in all_tags]
-    print(all_tags_contents)
     missing_tags = [tag for tag in tags if tag not in all_tags_contents]
-    print(missing_tags)
     for tag_body in missing_tags:
         tag = Tag(body=tag_body)
         tag.save()

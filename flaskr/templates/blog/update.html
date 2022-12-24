@@ -11,10 +11,26 @@
       value="{{ request.form['title'] or post['title'] }}" required>
     <label for="body">Body</label>
     <textarea name="body" id="body">{{ request.form['body'] or post['body'] }}</textarea>
+    <div>
+      <input id="custom-tag" placeholder="Add new tag...">
+      <span class="append-btn">+</span>
+    </div>
+    <span>Click on tag to add it to post... </span>
+    <div class="available-tags">
+      {% for tag in all_tags %}
+        {% if tag in post.tags %}
+        <span class="tag-pill selected">{{ tag.body }}</span>
+        {% else %}
+        <span class="tag-pill not-selected">{{ tag.body }}</span>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <input type="hidden" name="tags" id="tags">
     <input type="submit" value="Save">
   </form>
   <hr>
   <form action="{{ url_for('post.delete', id=post['id']) }}" method="post">
     <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
   </form>
+  <script type="module"  src="{{ url_for('static', filename='create.js') }}"></script>
 {% endblock %}

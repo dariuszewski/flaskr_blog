@@ -1,4 +1,5 @@
 let avaliableTags = document.querySelector('.available-tags');
+let preselectedTags = document.querySelectorAll('.selected')
 
 let selectedTagsArray = [];
 
@@ -8,10 +9,18 @@ let customTagInput = document.getElementById('custom-tag');
 let tagsHiddenInput = document.getElementById('tags');
  
 
+// This is for edition of existing tag. 
+for (let tag of preselectedTags) {
+    selectedTagsArray.push(tag.textContent);
+}
+tagsHiddenInput.value = selectedTagsArray;
+
+
 [...avaliableTags.children].forEach(tag =>
     tag.addEventListener('click', () => {
         tagToggle(tag);
     }))
+
 
 createTagButton.addEventListener('click', () => {
     // always convert tag to lower case.
@@ -41,6 +50,7 @@ createTagButton.addEventListener('click', () => {
     customTagInput.value = ''
 })
 
+
 function tagToggle(tag) {
     if (tag.classList.contains('not-selected')) {
         // user can add up to 5 tags.
@@ -64,6 +74,7 @@ function tagToggle(tag) {
         tagsHiddenInput.value = selectedTagsArray;
     };
 };
+
 
 function getTagByText(text) {
     return [...avaliableTags.children].filter(tag => tag.textContent == text)[0];
