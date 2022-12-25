@@ -31,7 +31,14 @@ createTagButton.addEventListener('click', () => {
         alert("You can't add an empty tag.");
         return ;
     }
-
+    else if(tagTextValue.length > 20) {
+        alert('Your tag can be up to 20 characters long.');
+        return ;
+    }
+    else if(tagTextValue.includes(',')) {
+        alert('Your tag contains illegal character.');
+        return ;
+    }
     if (!getTagByText(tagTextValue)) {
         // if typed tag doesn't exist yet, create it and set it to selected.
         let newTag = document.createElement("span");
