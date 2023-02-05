@@ -2,13 +2,20 @@
 
 {% block header %}
 <h1>{% block title %}Posts
-  {% if searched_tag %}
-    - {{ searched_tag }}
+  {% if keyword %}
+    - {{ keyword }}
   {% endif %}
   {% endblock %}</h1>
 {% if g.user %}
 <a class="action" href="{{ url_for('post.create') }}">New</a>
 {% endif %}
+{% endblock %}
+
+{% block searchbar %}
+<form method="POST">
+  <input type="text" name="keyword" id="keyword" maxlength="20">
+  <input type="submit" value="search">
+</form>
 {% endblock %}
 
 {% block content %}
