@@ -1,8 +1,10 @@
 from os import stat
-from sqlalchemy import desc
+from sqlalchemy import desc, or_
 
 from flaskr.extensions import db
 from flaskr.models.post_tag import post_tag
+from flaskr.models.tag import Tag
+from flaskr.models.user import User
 
 # SQLAlchemy automatically defines an __init__ method for each model that assigns 
 # any keyword arguments to corresponding database columns and other attributes.
@@ -33,6 +35,24 @@ class Post(db.Model):
         return db.session.execute(db
             .select(Post)
             .filter_by(id=id)).scalar()
+
+    @staticmethod
+    def get_posts_by_phrase(keyword):
+        if keyword:
+            keyword = f'%{keyword}%'
+            # return db.session.execute(db.select(Post).join(Post.user).filter_by(Post.user.username.ilike(phrase))).scalars()
+            return db.session.execute(db
+                .select(Post)
+                .join(User)
+                .join(post_tag).join(Tag)
+                .filter(or_(
+                    Post.title.ilike(keyword), 
+                    Post.body.ilike(keyword),
+                    User.username.ilike(keyword),
+                    Tag.body.ilike(keyword)
+                    ))).scalars()
+        else:
+            return Post.get_all()
 
     def save(self):
         db.session.add(self)
