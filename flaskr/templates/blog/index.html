@@ -12,9 +12,9 @@
 {% endblock %}
 
 {% block searchbar %}
-<form method="POST">
+<form method="GET">
   <input type="text" name="keyword" id="keyword" maxlength="20">
-  <input type="submit" value="search">
+  <input type="submit" value="search" id="search-btn">
 </form>
 {% endblock %}
 
@@ -25,4 +25,5 @@
 <hr>
 {% endif %}
 {% endfor %}
+<script type="module"  src="{{ url_for('static', filename='index.js') }}"></script>
 {% endblock %}

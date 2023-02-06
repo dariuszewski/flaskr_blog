@@ -78,3 +78,4 @@ alltags.forEach((tag) => {
         window.location.replace("/index?tag=" + tag.textContent);
     })
 })
+

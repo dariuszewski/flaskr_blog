@@ -38,21 +38,19 @@ class Post(db.Model):
 
     @staticmethod
     def get_posts_by_phrase(keyword):
-        if keyword:
-            keyword = f'%{keyword}%'
-            # return db.session.execute(db.select(Post).join(Post.user).filter_by(Post.user.username.ilike(phrase))).scalars()
-            return db.session.execute(db
-                .select(Post)
-                .join(User)
-                .join(post_tag).join(Tag)
-                .filter(or_(
-                    Post.title.ilike(keyword), 
-                    Post.body.ilike(keyword),
-                    User.username.ilike(keyword),
-                    Tag.body.ilike(keyword)
-                    ))).scalars()
-        else:
-            return Post.get_all()
+        keyword = f'%{keyword}%'
+        return db.session.execute(db
+            .select(Post)
+            .join(User)
+            .join(post_tag).join(Tag)
+            .order_by(desc(Post.created))
+            .filter(or_(
+                Post.title.ilike(keyword), 
+                Post.body.ilike(keyword),
+                User.username.ilike(keyword),
+                Tag.body.ilike(keyword)
+                ))
+            ).scalars()
 
     def save(self):
         db.session.add(self)
