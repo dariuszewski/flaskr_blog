@@ -43,6 +43,7 @@ class Post(db.Model):
             .select(Post)
             .join(User)
             .join(post_tag).join(Tag)
+            .distinct()
             .order_by(desc(Post.created))
             .filter(or_(
                 Post.title.ilike(keyword), 
@@ -51,6 +52,26 @@ class Post(db.Model):
                 Tag.body.ilike(keyword)
                 ))
             ).scalars()
+
+    @staticmethod
+    def get_posts_by_tag(tag):
+        result = db.session.execute(db
+            .select(Post)
+            .join(post_tag).join(Tag)
+            .distinct()
+            .filter(Tag.body == tag)).scalars()
+        return result
+
+    @staticmethod
+    def get_posts_by_tag_and_filter_by_keyword(tag, keyword):
+        posts = Post.get_posts_by_tag(tag)
+        filtered_posts = []
+        for post in posts:
+            if keyword in post.tags or keyword in post.body or keyword in post.user.username:
+                filtered_posts.append(post)
+        posts = list(set(filtered_posts))
+        return posts
+
 
     def save(self):
         db.session.add(self)
