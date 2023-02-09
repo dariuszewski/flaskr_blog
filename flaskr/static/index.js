@@ -2,7 +2,7 @@ let searchButton = document.querySelector('#search-btn');
 let keywordValue = document.querySelector('#keyword').value;
 
 searchButton.addEventListener('click', (keywordValue) => {
-    window.location.replace("/index?keyword=" + keywordValue);
+        window.location.replace("/index?keyword=" + keywordValue);
 })
 
 
@@ -10,14 +10,34 @@ let alltags = document.querySelectorAll('.tag-pill-sm');
 
 alltags.forEach((tag) => {
     tag.addEventListener('click', () => {
-        window.location.replace("/index?tag=" + tag.textContent);
+        if (tag.classList.contains('selected')) {
+            tag.classList.remove("selected");
+            tag.classList.add("not-selected");
+            window.location.replace("/index");
+        }
+        else {
+            tag.classList.remove("not-selected");
+            tag.classList.add("selected");
+            window.location.replace("/index?tag=" + tag.textContent);
+        }; 
     })
 })
+
+function activateTags(tagValue) {
+    let allTags = document.querySelectorAll('.tag-pill-sm');
+    for (let tag of allTags) {
+        if (tag.textContent == tagValue) {
+            tag.classList.remove("not-selected");
+            tag.classList.add("selected");
+        }
+    }
+}
+
 
 checkParams()
 
 function highlight(keyword){
-    Array.from(document.querySelectorAll("article, article *:not(script):not(style):not(noscript):not(span)"))
+    Array.from(document.querySelectorAll("article, article *:not(script):not(style):not(noscript)"))
       .flatMap(({childNodes}) => [...childNodes])
       .filter(({nodeType, textContent}) => nodeType === document.TEXT_NODE && textContent.includes(keyword))
       .forEach((textNode) => textNode.replaceWith(...textNode.textContent.split(keyword).flatMap((part) => [
@@ -29,16 +49,6 @@ function highlight(keyword){
         .slice(0, -1)));
 }
 
-
-function activateTags(tagValue) {
-    let allTags = document.querySelectorAll('.tag-pill-sm');
-    for (let tag of allTags) {
-        if (tag.textContent == tagValue) {
-            tag.classList.remove("not-selected");
-            tag.classList.add("selected");
-        }
-    }
-}
 
 function checkParams() {
     let url = window.location.href;

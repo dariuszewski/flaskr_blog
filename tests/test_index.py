@@ -25,27 +25,19 @@ def test_index(client, auth, database):
     assert b'href="/1/update"' in response.data
 
 
-def test_tag(client, auth, database):
+@pytest.mark.parametrize(
+    ('path', 'data_in', 'data_not_in'), (
+    ('tag=tag1', 'tag1', 'find posts matching criterium:'),
+    ('tag=tag1000', 'find posts matching criterium:', 'dummy'),
+    ('keyword=Body1', 'Body1', 'Body2'),
+    ('keyword=Body1000', 'find posts matching criterium:', 'dummy'),
+    ('tag=tag1&keyword=Body1', 'tag1', 'body2'),
+    ('tag=tag1&keyword=Body100', 'and containing', 'criterium'),
+))
+def test_filters(client, auth, database, path, data_in, data_not_in):
     auth.login()
     client.post('/create', data={'title': 'Post1', 'body': 'Body1', 'tags': 'tag1'})
     client.post('/create', data={'title': 'Post2', 'body': 'Body2', 'tags': 'tag2'})
-    response = client.get('/index?tag=tag2')
-    assert b'tag1' not in response.data
-    assert b'tag2' in response.data
-
-
-def test_successful_search(client, auth, database):
-    auth.login()
-    client.post('/create', data={'title': 'Post1', 'body': 'Body1', 'tags': 'tag1'})
-    client.post('/create', data={'title': 'Post2', 'body': 'Body2', 'tags': 'tag2'})
-    response = client.get('/index?keyword=Body1')
-    assert b'Body2' not in response.data
-    assert b'Body1' in response.data
-
-
-def test_failed_search(client, auth, database):
-    auth.login()
-    client.post('/create', data={'title': 'Post1', 'body': 'Body1', 'tags': 'tag1'})
-    client.post('/create', data={'title': 'Post2', 'body': 'Body2', 'tags': 'tag2'})
-    response = client.get('/index?keyword=Body100')
-    assert b"posts matching criterium: " in response.data
+    response = client.get('/index?' + path)
+    assert data_in in response.text
+    assert data_not_in not in response.text

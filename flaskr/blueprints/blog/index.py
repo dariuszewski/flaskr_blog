@@ -11,7 +11,6 @@ bp = Blueprint('index', __name__)
 @bp.route('/', methods=('GET', 'POST'))
 @bp.route('/index', methods=('GET', 'POST')) 
 def index():          
-
     if request.args:
 
         if request.args.get('keyword') and request.args.get('tag'):
@@ -28,15 +27,6 @@ def index():
                 posts = Post.get_all()
                 return render_template('blog/index.html', posts=posts)
 
-        if request.args.get('keyword'):
-            keyword = request.args['keyword']
-            posts = Post.get_posts_by_phrase(keyword).all()
-            if posts:
-                return render_template('blog/index.html', posts=posts, keyword=keyword)
-            else:
-                message = f"Can't find posts matching criterium: '{keyword}'"
-                flash(message)
-            
         if request.args.get('tag'):
             searched_tag = request.args['tag']
             posts = Post.get_posts_by_tag(searched_tag).all()
@@ -44,7 +34,16 @@ def index():
                 return render_template('blog/index.html', posts=posts, keyword=searched_tag)
             else:
                 message = f"Can't find posts matching criterium: '{searched_tag}'"
-                flash(message)              
+                flash(message)   
+
+        if request.args.get('keyword'):
+            keyword = request.args['keyword']
+            posts = Post.get_posts_by_phrase(keyword).all()
+            if posts:
+                return render_template('blog/index.html', posts=posts, keyword=keyword)
+            else:
+                message = f"Can't find posts matching criterium: '{keyword}'"
+                flash(message)           
 
     posts = Post.get_all()
     return render_template('blog/index.html', posts=posts)
