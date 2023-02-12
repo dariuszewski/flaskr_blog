@@ -349,3 +349,26 @@ input[type=submit] {
     padding: 2px;
 
 }
+
+.center {
+    text-align: center;
+}
+
+.pagination {
+    display: inline-block;
+    margin: auto;
+  }
+  
+  .pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+  }
+
+  .pagination a.active {
+    background-color: #377ba8;
+    color: white;
+  }
+  
+  .pagination a:hover:not(.active) {background-color: #ddd;}

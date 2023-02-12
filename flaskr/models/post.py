@@ -25,10 +25,12 @@ class Post(db.Model):
     tags = db.relationship('Tag', secondary=post_tag)
 
     @staticmethod
-    def get_all():
-        return db.session.execute(db
+    def get_all(page=1, per_page=5):
+        return db.paginate(db
             .select(Post)
-            .order_by(desc(Post.created))).scalars()
+            .order_by(desc(Post.created)),
+            page=page, per_page=per_page)
+
 
     @staticmethod
     def get_post_by_id(id):

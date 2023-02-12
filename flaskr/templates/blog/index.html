@@ -26,5 +26,18 @@
 <hr>
 {% endif %}
 {% endfor %}
+<div class="center">
+  <div class="pagination">
+    <a href="#">&laquo;</a>
+    {% for page_num in posts.iter_pages() %}
+      {% if posts.page == page_num %}
+        <a class="active" href="#">{{ page_num }}</a>
+      {% else %}
+        <a href="#">{{ page_num }}</a>
+      {% endif %}
+    {% endfor %}    
+    <a href="#">&raquo;</a>
+  </div>
+</div>
 <script type="module"  src="{{ url_for('static', filename='index.js') }}"></script>
 {% endblock %}
