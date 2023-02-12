@@ -29,7 +29,7 @@ def index():
 
         if request.args.get('tag'):
             searched_tag = request.args['tag']
-            posts = Post.get_posts_by_tag(searched_tag).all()
+            posts = Post.get_posts_by_tag(searched_tag)
             if posts:
                 return render_template('blog/index.html', posts=posts, keyword=searched_tag)
             else:
@@ -45,5 +45,6 @@ def index():
                 message = f"Can't find posts matching criterium: '{keyword}'"
                 flash(message)           
 
-    posts = Post.get_all()
+    page = request.args.get('page', 1, type=int)
+    posts = Post.get_all(page=page)
     return render_template('blog/index.html', posts=posts)

@@ -28,15 +28,19 @@
 {% endfor %}
 <div class="center">
   <div class="pagination">
-    <a href="#">&laquo;</a>
+    {% if posts.page == 1 %}
+      <a href="{{ url_for('index', page=posts.page) }}">&laquo;</a>
+    {% else %}
+      <a href="{{ url_for('index', page=posts.page-1) }}">&laquo;</a>
+    {% endif %}
     {% for page_num in posts.iter_pages() %}
       {% if posts.page == page_num %}
-        <a class="active" href="#">{{ page_num }}</a>
+        <a class="active" href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
       {% else %}
-        <a href="#">{{ page_num }}</a>
+        <a href="{{ url_for('index', page=page_num) }}">{{ page_num }}</a>
       {% endif %}
-    {% endfor %}    
-    <a href="#">&raquo;</a>
+    {% endfor %}
+    <a href="{{ url_for('index', page=posts.page+1) }}">&raquo;</a>    
   </div>
 </div>
 <script type="module"  src="{{ url_for('static', filename='index.js') }}"></script>

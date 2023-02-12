@@ -56,13 +56,13 @@ class Post(db.Model):
             ).scalars()
 
     @staticmethod
-    def get_posts_by_tag(tag):
-        result = db.session.execute(db
+    def get_posts_by_tag(tag, page=1, per_page=5):
+        return db.paginate(db
             .select(Post)
             .join(post_tag).join(Tag)
             .distinct()
-            .filter(Tag.body == tag)).scalars()
-        return result
+            .filter(Tag.body == tag),
+            page=page, per_page=per_page)
 
     @staticmethod
     def get_posts_by_tag_and_filter_by_keyword(tag, keyword):
