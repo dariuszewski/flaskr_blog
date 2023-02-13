@@ -39,9 +39,9 @@ class Post(db.Model):
             .filter_by(id=id)).scalar()
 
     @staticmethod
-    def get_posts_by_phrase(keyword):
+    def get_posts_by_phrase(keyword, page=1, per_page=5):
         keyword = f'%{keyword}%'
-        return db.session.execute(db
+        return db.paginate(db
             .select(Post)
             .join(User)
             .join(post_tag).join(Tag)
@@ -52,8 +52,8 @@ class Post(db.Model):
                 Post.body.ilike(keyword),
                 User.username.ilike(keyword),
                 Tag.body.ilike(keyword)
-                ))
-            ).scalars()
+                )),
+            page=page, per_page=per_page)
 
     @staticmethod
     def get_posts_by_tag(tag, page=1, per_page=5):

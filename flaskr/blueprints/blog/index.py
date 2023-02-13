@@ -27,24 +27,27 @@ def index():
                 posts = Post.get_all()
                 return render_template('blog/index.html', posts=posts)
 
-        if request.args.get('tag'):
-            searched_tag = request.args['tag']
-            posts = Post.get_posts_by_tag(searched_tag)
-            if posts:
-                return render_template('blog/index.html', posts=posts, keyword=searched_tag)
-            else:
-                message = f"Can't find posts matching criterium: '{searched_tag}'"
-                flash(message)   
+        # if request.args.get('keyword'):
+        #     keyword = request.args['keyword']
+        #     posts = Post.get_posts_by_phrase(keyword).all()
+        #     if posts:
+        #         return render_template('blog/index.html', posts=posts, keyword=keyword)
+        #     else:
+        #         message = f"Can't find posts matching criterium: '{keyword}'"
+        #         flash(message)           
 
-        if request.args.get('keyword'):
-            keyword = request.args['keyword']
-            posts = Post.get_posts_by_phrase(keyword).all()
-            if posts:
-                return render_template('blog/index.html', posts=posts, keyword=keyword)
-            else:
-                message = f"Can't find posts matching criterium: '{keyword}'"
-                flash(message)           
-
+    
     page = request.args.get('page', 1, type=int)
-    posts = Post.get_all(page=page)
-    return render_template('blog/index.html', posts=posts)
+    tag = request.args.get('tag')
+    keyword = request.args.get('keyword')
+
+    #TODO: do something with search without tag
+    if tag:
+        keyword = tag
+        posts = Post.get_posts_by_tag(tag=tag, page=page)
+    elif keyword:
+        posts = Post.get_posts_by_phrase(keyword=keyword, page=page)
+    else:
+        posts = Post.get_all(page=page)
+
+    return render_template('blog/index.html', posts=posts, keyword=keyword)
