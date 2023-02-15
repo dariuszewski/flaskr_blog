@@ -64,17 +64,6 @@ class Post(db.Model):
             .filter(Tag.body == tag),
             page=page, per_page=per_page)
 
-    @staticmethod
-    def get_posts_by_tag_and_filter_by_keyword(tag, keyword):
-        posts = Post.get_posts_by_tag(tag)
-        filtered_posts = []
-        for post in posts:
-            if keyword in post.tags or keyword in post.body or keyword in post.user.username:
-                filtered_posts.append(post)
-        posts = list(set(filtered_posts))
-        return posts
-
-
     def save(self):
         db.session.add(self)
         db.session.commit()

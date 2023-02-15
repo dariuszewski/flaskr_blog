@@ -27,12 +27,10 @@ def test_index(client, auth, database):
 
 @pytest.mark.parametrize(
     ('path', 'data_in', 'data_not_in'), (
-    ('tag=tag1', 'tag1', 'find posts matching criterium:'),
-    ('tag=tag1000', 'find posts matching criterium:', 'dummy'),
     ('keyword=Body1', 'Body1', 'Body2'),
     ('keyword=Body1000', 'find posts matching criterium:', 'dummy'),
-    ('tag=tag1&keyword=Body1', 'tag1', 'body2'),
-    ('tag=tag1&keyword=Body100', 'and containing', 'criterium'),
+    ('tag=tag1', 'tag1', 'tag2'),
+    ('tag=tag1000', 'find posts matching criterium:', 'dummy'),
 ))
 def test_filters(client, auth, database, path, data_in, data_not_in):
     auth.login()
@@ -41,3 +39,20 @@ def test_filters(client, auth, database, path, data_in, data_not_in):
     response = client.get('/index?' + path)
     assert data_in in response.text
     assert data_not_in not in response.text
+
+
+def test_pagination(client, auth, database):
+    auth.login()
+    client.post('/create', data={'title': 'Post1', 'body': 'Body1', 'tags': 'tag1'})
+    client.post('/create', data={'title': 'Post2', 'body': 'Body2', 'tags': 'tag2'})
+    client.post('/create', data={'title': 'Post3', 'body': 'Body3', 'tags': 'tag3'})
+    client.post('/create', data={'title': 'Post4', 'body': 'Body4', 'tags': 'tag4'})
+    client.post('/create', data={'title': 'Post5', 'body': 'Body5', 'tags': 'tag5'})
+    client.post('/create', data={'title': 'Post6', 'body': 'Body6', 'tags': 'tag6'})
+    response = client.get('/index')
+    assert 'tag1' in response.text
+    assert 'tag6' not in response.text
+    response = client.get('/index?page=2')
+    assert 'tag6' in response.text
+    assert 'tag1' not in response.text
+
