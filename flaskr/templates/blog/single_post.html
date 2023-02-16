@@ -10,12 +10,8 @@
     </header>
     <div class="clearfix">
         <div class="post-body">
-            <div class="img-container">
-                <img src="{{ url_for('static', filename='default_image.png') }}" alt="" align="middle">
-            </div>
-            <div class="text-container">
-                <p class="body">{{ post['body'] }}</p>
-            </div>         
+            <img src="{{ url_for('static', filename='default_image.png') }}" alt="" class="post-image">
+            <p class="body">{{ post['body'] }}</p>
         </div>
     </div>
     <div></div>
