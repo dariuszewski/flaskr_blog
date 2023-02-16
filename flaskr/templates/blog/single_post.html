@@ -8,14 +8,22 @@
         <a class="action" href="{{ url_for('post.update', id=post['id']) }}">Edit</a>
         {% endif %}
     </header>
-    <p class="body">{{ post['body'] }}</p>
-    {% for tag in post.tags %}
-        <span class="tag-pill-sm not-selected">{{ tag.body }}</span>
-            <!-- <a href="{{ url_for('index', tag=tag['body']) }}">{{ tag.body }}</a> -->
-        <!-- </span> -->
-    {% endfor %}
-    <hr>
+    <div class="clearfix">
+        <div class="post-body">
+            <div class="img-container">
+                <img src="{{ url_for('static', filename='default_image.png') }}" alt="" align="middle">
+            </div>
+            <div class="text-container">
+                <p class="body">{{ post['body'] }}</p>
+            </div>         
+        </div>
+    </div>
+    <div></div>
     <div class="post-footer">
+        {% for tag in post.tags %}
+            <span class="tag-pill-sm not-selected">{{ tag.body }}</span>
+        {% endfor %}
+        <hr>
         <span class="thumb" id="like-button-{{ post['id'] }}" onclick="like( {{ post['id'] }} )">
             {% if g.user['id'] in post.likes|map(attribute='author_id') %}
                 &#128078;

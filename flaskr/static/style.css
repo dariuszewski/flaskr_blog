@@ -357,18 +357,37 @@ input[type=submit] {
 .pagination {
     display: inline-block;
     margin: auto;
-  }
-  
-  .pagination a {
+}
+
+.pagination a {
     color: black;
     float: left;
     padding: 8px 16px;
     text-decoration: none;
-  }
-
-  .pagination a.active {
+}
+.pagination a.active {
     background-color: #377ba8;
     color: white;
-  }
-  
-  .pagination a:hover:not(.active) {background-color: #ddd;}
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+
+.img-container {
+    float: right;
+    width: 33.33%; /* three containers (use 25% for four, and 50% for two, etc) */
+    padding: 5px; /* if you want space between the images */
+    margin-bottom: 5px;
+}
+
+.text-container {
+    float: left;
+    width: 33.33%; /* three containers (use 25% for four, and 50% for two, etc) */
+    padding: 5px; /* if you want space between the images */
+    margin-bottom: 5px;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
