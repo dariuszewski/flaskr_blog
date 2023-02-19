@@ -114,8 +114,6 @@ def update(id):
             error = 'Body is required.'
         if not title:
             error = 'Title is required.'
-        if photo.seek(0, os.SEEK_END) > current_app.config['MAX_CONTENT_LENGTH']:
-            error = "File exceeded 16 MB limit."
 
         if error is not None:
             flash(error)
