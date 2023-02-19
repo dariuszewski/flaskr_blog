@@ -18,16 +18,13 @@ def create_app(test_config=None):
         app_settings = os.getenv('APP_SETTINGS') or 'flaskr.config.DevelopmentConfig'
         app.config.from_object(app_settings)
         app.config['UPLOADED_PHOTOS_DEST']  = app.root_path + "/static/img"
-        # app.config['UPLOADED_PHOTOS_DEST']  = app.root_path + "/static/img/"
+        os.makedirs(app.config['UPLOADED_PHOTOS_DEST'], exist_ok=True)
     else:
         # Load testing config when passed in. 
         app.config.from_mapping(test_config) # Special configuration for testing purposes.
         
     # Ensure the instance folder exists, this is only for sqlite.
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
+    os.makedirs(app.instance_path, exist_ok=True)
 
     # register extensions
     # Using this design pattern, no application-specific state is stored on the extension object,
