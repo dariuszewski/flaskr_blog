@@ -103,6 +103,9 @@ def update(id):
         body = request.form['body']
         tags = validate_tags(request.form['tags'])
         photo = request.files['photo']
+        remove_photo = request.form.getlist('remove_photo')
+        print(remove_photo)
+                                    
         error = None
 
         if not tags:
@@ -119,10 +122,7 @@ def update(id):
         else:
             post.title = title
             post.body = body
-            if photo:
-                photo = update_photo(old_photo=post.image, new_photo=photo)
-                print(photo)
-                post.image = photo
+            post.image = update_photo(old_photo=post.image, new_photo=photo, remove_photo=remove_photo)
             create_missing_tags(tags, all_tags) # add new tags to the database.
             current_post_tags = Tag.get_tags_by_bodies(tags) # get tag objects with same body as selected.
             post.tags = []
@@ -182,8 +182,16 @@ def upload_photo(photo):
     i.save('/'.join([current_app.config['UPLOADED_PHOTOS_DEST'], filename]))
     return filename
 
-def update_photo(old_photo, new_photo):
-    if old_photo:
+def update_photo(old_photo, new_photo, remove_photo):
+    if remove_photo:
+        if old_photo:
+            old_photo_path = '/'.join([current_app.config['UPLOADED_PHOTOS_DEST'], old_photo])
+            if os.path.exists(old_photo_path):
+                os.remove(old_photo_path)
+        return None
+    if not new_photo:
+        return old_photo
+    if old_photo:         
         old_photo = '/'.join([current_app.config['UPLOADED_PHOTOS_DEST'], old_photo])
         if os.path.exists(old_photo):
             os.remove(old_photo)

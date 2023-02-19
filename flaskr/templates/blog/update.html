@@ -12,11 +12,10 @@
     <label for="body">Body</label>
     <textarea name="body" id="body">{{ request.form['body'] or post['body'] }}</textarea>
     <label for="remove_photo">Remove photo: 
-      <input type="checkbox" value="remove_photo" name="remove_photo" id="remove_photo">
+      <input type="checkbox" value="{{ request.form['remove_photo'] or None }}" name="remove_photo" id="remove_photo">
     </label>
-
-    <label for="photo">Image</label>
-    <input type="file" name="photo" id="photo" value="{{ request.form['photo'] }}">
+    <label for="photo" id="photo_label">Image</label>
+    <input type="file" name="photo" id="photo" value="{{ request.form['photo'] or post['photo'] }}">
     <div>
       <input id="custom-tag" placeholder="Add new tag...">
       <span class="append-btn">+</span>
@@ -39,4 +38,5 @@
     <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
   </form>
   <script type="module"  src="{{ url_for('static', filename='create.js') }}"></script>
+  <script type="module"  src="{{ url_for('static', filename='update.js') }}"></script>
 {% endblock %}

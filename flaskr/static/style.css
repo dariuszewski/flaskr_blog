@@ -396,3 +396,7 @@ input[type=submit] {
     float: right;    
     margin: 0 0 0 15px;
 }
+
+input[type=checkbox] {
+    accent-color: red
+  }
