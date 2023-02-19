@@ -16,6 +16,7 @@ class Post(db.Model):
     created = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     title = db.Column(db.String(120))
     body = db.Column(db.String(2000))
+    image = db.Column(db.String(120))
 
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 

@@ -5,12 +5,18 @@
 {% endblock %}
 
 {% block content %}
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
     <label for="title">Title</label>
     <input name="title" id="title"
       value="{{ request.form['title'] or post['title'] }}" required>
     <label for="body">Body</label>
     <textarea name="body" id="body">{{ request.form['body'] or post['body'] }}</textarea>
+    <label for="remove_photo">Remove photo: 
+      <input type="checkbox" value="remove_photo" name="remove_photo" id="remove_photo">
+    </label>
+
+    <label for="photo">Image</label>
+    <input type="file" name="photo" id="photo" value="{{ request.form['photo'] }}">
     <div>
       <input id="custom-tag" placeholder="Add new tag...">
       <span class="append-btn">+</span>

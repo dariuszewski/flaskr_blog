@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask
-
+from flask_uploads import configure_uploads
 
 # Application Factory Pattern. This can be called with flask --app flaskr --debug run
 # App will expect to have $env:APP_SETTINGS variable which contains Config Object (ex. flaskr.config.DevelopmentConfig). 
@@ -17,10 +17,12 @@ def create_app(test_config=None):
         # load the instance config if not testing
         app_settings = os.getenv('APP_SETTINGS') or 'flaskr.config.DevelopmentConfig'
         app.config.from_object(app_settings)
+        app.config['UPLOADED_PHOTOS_DEST']  = app.root_path + "/static/img"
+        # app.config['UPLOADED_PHOTOS_DEST']  = app.root_path + "/static/img/"
     else:
         # Load testing config when passed in. 
         app.config.from_mapping(test_config) # Special configuration for testing purposes.
-
+        
     # Ensure the instance folder exists, this is only for sqlite.
     try:
         os.makedirs(app.instance_path)
@@ -30,8 +32,9 @@ def create_app(test_config=None):
     # register extensions
     # Using this design pattern, no application-specific state is stored on the extension object,
     # so one extension object can be used for multiple apps.
-    from flaskr.extensions import db
+    from flaskr.extensions import db, photos
     db.init_app(app)
+    configure_uploads(app, photos)
     # Create the database tables in the app context (since no request is available at this stage).
     # This doesn't update existing tables (use Alembic to do that).
     with app.app_context():
@@ -46,10 +49,6 @@ def create_app(test_config=None):
     # register blueprints
     from .blueprints import auth
     app.register_blueprint(auth.bp)
-
-    # from . import blog
-    # app.register_blueprint(blog.bp)
-    # app.add_url_rule('/', endpoint='index')
 
     from .blueprints.blog import index
     from .blueprints.blog import like

@@ -10,7 +10,9 @@
     </header>
     <div class="clearfix">
         <div class="post-body">
-            <img src="{{ url_for('static', filename='default_image.png') }}" alt="" class="post-image">
+            {% if post.image %}
+                <img src="{{ url_for('static', filename='img/' + post.image) }}" alt="" class="post-image">
+            {% endif %}
             <p class="body">{{ post['body'] }}</p>
         </div>
     </div>

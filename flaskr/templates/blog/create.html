@@ -6,13 +6,13 @@
 
 {% block content %}
 <!-- onsubmit="return false;" id="form" novalidate -->
-  <form method="post" > 
+  <form method="post" enctype="multipart/form-data"> 
     <label for="title">Title</label>
     <input name="title" id="title" value="{{ request.form['title'] }}">
     <label for="body">Body</label>
     <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
     <label for="body">Image</label>
-    <input type="file" value="{{ request.form['image'] }}">
+    <input type="file" name="photo" id="photo" value="{{ request.form['photo'] }}">
     <span class="label-span">Tags</span>
     <div>
       <input id="custom-tag" placeholder="Add new tag...">

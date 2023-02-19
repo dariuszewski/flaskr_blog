@@ -1,14 +1,19 @@
+import uuid
+import os
+
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, current_app
 )
+from flask_uploads import extension
 from werkzeug.exceptions import abort
+from PIL import Image
 
 from flaskr.blueprints.auth import login_required
 from flaskr.blueprints.blog.comment import create_comment, update_comment
 from flaskr.models.post import Post
 from flaskr.models.comment import Comment
 from flaskr.models.tag import Tag
-from flaskr.extensions import db
+from flaskr.extensions import db, photos
 
 
 bp = Blueprint('post', __name__)
@@ -56,6 +61,7 @@ def create():
         title = request.form['title']
         body = request.form['body']
         tags = validate_tags(request.form['tags'])
+        photo = request.files['photo']
         error = None
 
         if not tags:
@@ -64,18 +70,24 @@ def create():
             error = 'Body is required.'
         if not title:
             error = 'Title is required.'
+        if photo.seek(0, os.SEEK_END) > current_app.config['MAX_CONTENT_LENGTH']:
+            error = "File exceeded 16 MB limit."
 
         if error is not None:
             flash(error)
         else:
-            post = Post(title=title, body=body, author_id=g.user.id)
+            # upload photo
+            photo = upload_photo(photo) if photo else None
+            # create post entry
+            post = Post(title=title, body=body, author_id=g.user.id, image=photo)
+            # add tmissing tags to db
             create_missing_tags(tags, all_tags)
+            # add tags to post
             current_post_tags = Tag.get_tags_by_bodies(tags)
             for tag in current_post_tags:
-                print(tag.body)
                 post.tags.append(tag)
+            # save post
             post.save()
-            print(post.tags)
             return redirect(url_for('index'))
 
     return render_template('blog/create.html', tags=all_tags)
@@ -90,6 +102,7 @@ def update(id):
         title = request.form['title']
         body = request.form['body']
         tags = validate_tags(request.form['tags'])
+        photo = request.files['photo']
         error = None
 
         if not tags:
@@ -98,12 +111,18 @@ def update(id):
             error = 'Body is required.'
         if not title:
             error = 'Title is required.'
+        if photo.seek(0, os.SEEK_END) > current_app.config['MAX_CONTENT_LENGTH']:
+            error = "File exceeded 16 MB limit."
 
         if error is not None:
             flash(error)
         else:
             post.title = title
             post.body = body
+            if photo:
+                photo = update_photo(old_photo=post.image, new_photo=photo)
+                print(photo)
+                post.image = photo
             create_missing_tags(tags, all_tags) # add new tags to the database.
             current_post_tags = Tag.get_tags_by_bodies(tags) # get tag objects with same body as selected.
             post.tags = []
@@ -153,3 +172,19 @@ def create_missing_tags(tags, all_tags):
     for tag_body in missing_tags:
         tag = Tag(body=tag_body)
         tag.save()
+
+def upload_photo(photo):
+    output_size = 200, 200
+    i = Image.open(photo)
+    i.thumbnail(output_size)
+    filename = '{}.{}'.format(uuid.uuid4(), extension(photo.filename))
+
+    i.save('/'.join([current_app.config['UPLOADED_PHOTOS_DEST'], filename]))
+    return filename
+
+def update_photo(old_photo, new_photo):
+    if old_photo:
+        old_photo = '/'.join([current_app.config['UPLOADED_PHOTOS_DEST'], old_photo])
+        if os.path.exists(old_photo):
+            os.remove(old_photo)
+    return upload_photo(new_photo)
