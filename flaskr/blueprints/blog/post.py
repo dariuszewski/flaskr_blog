@@ -172,9 +172,9 @@ def create_missing_tags(tags, all_tags):
         tag.save()
 
 def upload_photo(photo):
-    output_size = 200, 200
+    size = (399, 266)
     i = Image.open(photo)
-    i.thumbnail(output_size)
+    i = i.resize(size)
     filename = '{}.{}'.format(uuid.uuid4(), extension(photo.filename))
 
     i.save('/'.join([current_app.config['UPLOADED_PHOTOS_DEST'], filename]))
