@@ -1,5 +1,8 @@
 # test_blog.py
 
+
+import io
+
 import pytest
 
 from flaskr.models.post import Post
@@ -49,7 +52,9 @@ def test_create(client, auth, database):
     # Then: Can create a post.
     assert client.get('/create').status_code == 200
     # When: Posting data.
-    client.post('/create', data={'title': 'created', 'body': 'created', 'tags': 'created'})
+    client.post('/create', 
+                data={'title': 'created', 'body': 'created', 'tags': 'created', 'photo': (io.BytesIO(b"abcdef"), '')},
+                content_type='multipart/form-data')
     # Then: Title available in list of titles.
     assert 'created' in list(*zip(*database.session.execute(database.select(Post.title)).all()))
 
@@ -59,25 +64,32 @@ def test_update(client, auth, database):
     auth.login()
     # Assert: User can upadate post with author_id=1.
     assert client.get('/1/update').status_code == 200
-    client.post('/1/update', data={'title': 'updated', 'body': 'updated', 'tags': 'updated'})
+    client.post('/1/update', 
+                data={'title': 'updated', 'body': 'updated', 'tags': 'updated', 'photo': (io.BytesIO(b"abcdef"), '')},
+                content_type='multipart/form-data')
     # Assert post with id=1 have title 'updated'.
     assert Post.get_post_by_id(1).title == 'updated'
     assert 'tag1' not in Post.get_post_by_id(1).tags
 
 
 @pytest.mark.parametrize(
-    ('path', 'title', 'body', 'tags','message'), (
-    ('/create','','','','Title is required.'),
-    ('/create','Title','','','Body is required.'),
-    ('/create','Title','Body','','At least 1 tag is required.'),
-    ('/1/update','','','','Title is required.'),
-    ('/1/update','Title','','','Body is required.'),
-    ('/1/update','Title','Body','','At least 1 tag is required.'),
+    ('path', 'title', 'body', 'tags', 'photo', 'message'), (
+    ('/create','', '', '', '', 'Title is required.'),
+    ('/create', 'Title', '', '', '', 'Body is required.'),
+    ('/create', 'Title', 'Body', '', '', 'At least 1 tag is required.'),
+    # ('/create', 'Title', 'Body', 'Tag', (io.BytesIO(b"abcdef"), 'test'*1000), 'Request Entity Too Large'),
+    ('/1/update', '', '', '', '', 'Title is required.'),
+    ('/1/update', 'Title', '', '','', 'Body is required.'),
+    ('/1/update', 'Title', 'Body', '', '', 'At least 1 tag is required.'),
+    # ('/1/update', 'Title', 'Body', 'Tag', (io.BytesIO(b"abcdef"), 'test'*1000), 'Request Entity Too Large'),
 ))
-def test_create_update_validate(client, auth, database, path, title, body, tags, message):
+def test_create_update_validate(client, auth, database, path, title, body, tags, photo, message):
     # Test if validation of input works.
     auth.login()
-    response = client.post(path, data={'title': title, 'body': body, 'tags': tags})
+    if not photo:
+        photo = (io.BytesIO(b"abcdef"), '')
+    response = client.post(path, data={'title': title, 'body': body, 'tags': tags, 'photo': photo},
+                           content_type='multipart/form-data')
     assert bytes(message, encoding='utf-8') in response.data
 
 

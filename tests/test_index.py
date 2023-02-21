@@ -1,4 +1,5 @@
 import pytest
+import io
 
 from flaskr.models.post import Post
 from flaskr.models.comment import Comment
@@ -34,25 +35,28 @@ def test_index(client, auth, database):
 ))
 def test_filters(client, auth, database, path, data_in, data_not_in):
     auth.login()
-    client.post('/create', data={'title': 'Post1', 'body': 'Body1', 'tags': 'tag1'})
-    client.post('/create', data={'title': 'Post2', 'body': 'Body2', 'tags': 'tag2'})
-    response = client.get('/index?' + path)
-    assert data_in in response.text
-    assert data_not_in not in response.text
+    client.post('/create', data={'title': 'Post1', 'body': 'Body1', 'tags': 'tag1', 'photo': (io.BytesIO(b"abcdef"), '')}, content_type='multipart/form-data')
+    client.post('/create', data={'title': 'Post2', 'body': 'Body2', 'tags': 'tag2', 'photo': (io.BytesIO(b"abcdef"), '')}, content_type='multipart/form-data')
+    response = client.get('/?' + path)
+    assert bytes(data_in, encoding='utf-8') in response.data
+    assert bytes(data_not_in, encoding='utf-8') not in response.data
 
 
 def test_pagination(client, auth, database):
+    # Given: User is logged in and creates at least 6 posts
     auth.login()
-    client.post('/create', data={'title': 'Post1', 'body': 'Body1', 'tags': 'tag1'})
-    client.post('/create', data={'title': 'Post2', 'body': 'Body2', 'tags': 'tag2'})
-    client.post('/create', data={'title': 'Post3', 'body': 'Body3', 'tags': 'tag3'})
-    client.post('/create', data={'title': 'Post4', 'body': 'Body4', 'tags': 'tag4'})
-    client.post('/create', data={'title': 'Post5', 'body': 'Body5', 'tags': 'tag5'})
-    client.post('/create', data={'title': 'Post6', 'body': 'Body6', 'tags': 'tag6'})
-    response = client.get('/index')
-    assert 'tag1' in response.text
-    assert 'tag6' not in response.text
-    response = client.get('/index?page=2')
-    assert 'tag6' in response.text
-    assert 'tag1' not in response.text
-
+    for i in range(6):
+        client.post('/create', 
+                data={'title': f'Post{i}', 'body': f'Body{i}', 'tags': f'tag{i}', 'photo': (io.BytesIO(b"abcdef"), '')}, 
+                content_type='multipart/form-data')
+    # When:
+    response = client.get('/')
+    # Then:
+    assert b'Post1' in response.data
+    assert b'Post4' not in response.data
+    # When:
+    page_2 = client.get('/?page=2')
+    # Then:
+    page_2.status_code == 200
+    assert b'Post4' in page_2.data
+    assert b'Post1' not in page_2.data

@@ -63,7 +63,8 @@ def create():
         tags = validate_tags(request.form['tags'])
         photo = request.files['photo']
         error = None
-
+        print('photo')
+        print(photo)
         if not tags:
             error = 'At least 1 tag is required.'
         if not body:

@@ -22,7 +22,9 @@ def app():
     app = create_app({
         'TESTING': True, # Tells Flask that the app is in test mode to change some internal behavior. Other extensions can also use the flag.
         'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
-        'SECRET_KEY': 'test'
+        'SECRET_KEY': 'test',
+        'UPLOADED_PHOTOS_DEST': '/static/test/img',
+        'MAX_CONTENT_LENGTH': 1000
     })
 
     with app.app_context():
@@ -42,7 +44,7 @@ def database():
     user = User(username='other', 
     password='pbkdf2:sha256:260000$5nA3Qw0INBKctANp$d02abb7c77f46bf38708c97a0fb8b3067c5944e85f04fb2b8e31164cf9562d62')
     user.save()
-    post = Post(title='test title', body='test\nbody', author_id=1)
+    post = Post(title='test title', body='test\nbody', author_id=1, image=None)
     post.tags = [Tag(body='test1')]
     post.save()
     like = Like(post_id=1, author_id=2)
