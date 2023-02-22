@@ -15,6 +15,7 @@ from flaskr.models.user import User
 from flaskr.models.post import Post
 from flaskr.models.like import Like
 from flaskr.models.tag import Tag
+from flaskr.models.comment import Comment
 
 @pytest.fixture(scope="module") # This fixture is destroyed during teardown of the last test in the "module".
 def app():
@@ -49,9 +50,14 @@ def database():
     post.save()
     like = Like(post_id=1, author_id=2)
     like.save()
+    # comment = Comment(body='comment1', parent_id=-1, author_id=11, post_id=22)
+    # comment.save()
     ##################################################################
     yield db
     # Drop on teardown.
+    # posts = db.session.execute(db.select(Post)).all()
+    # for post in posts:
+    #     Comment.recursive_delete(post)
     db.session.remove()
     db.drop_all()
 

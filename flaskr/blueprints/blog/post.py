@@ -63,16 +63,13 @@ def create():
         tags = validate_tags(request.form['tags'])
         photo = request.files['photo']
         error = None
-        print('photo')
-        print(photo)
+
         if not tags:
             error = 'At least 1 tag is required.'
         if not body:
             error = 'Body is required.'
         if not title:
             error = 'Title is required.'
-        if photo.seek(0, os.SEEK_END) > current_app.config['MAX_CONTENT_LENGTH']:
-            error = "File exceeded 16 MB limit."
 
         if error is not None:
             flash(error)
@@ -185,8 +182,10 @@ def update_photo(old_photo, new_photo, remove_photo):
     if remove_photo:
         if old_photo:
             old_photo_path = '/'.join([current_app.config['UPLOADED_PHOTOS_DEST'], old_photo])
-            if os.path.exists(old_photo_path):
+            try:
                 os.remove(old_photo_path)
+            except FileNotFoundError:
+                pass
         return None
     if not new_photo:
         return old_photo
