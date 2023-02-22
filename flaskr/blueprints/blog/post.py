@@ -102,7 +102,6 @@ def update(id):
         tags = validate_tags(request.form['tags'])
         photo = request.files['photo']
         remove_photo = request.form.getlist('remove_photo')
-        print(remove_photo)
                                     
         error = None
 
@@ -187,10 +186,14 @@ def update_photo(old_photo, new_photo, remove_photo):
             except FileNotFoundError:
                 pass
         return None
-    if not new_photo:
+    if not new_photo or new_photo.filename is None:
+        print('im hereee')
         return old_photo
-    if old_photo:         
-        old_photo = '/'.join([current_app.config['UPLOADED_PHOTOS_DEST'], old_photo])
-        if os.path.exists(old_photo):
-            os.remove(old_photo)
+    if old_photo:
+        old_photo_path = '/'.join([current_app.config['UPLOADED_PHOTOS_DEST'], old_photo])
+        try:
+            os.remove(old_photo_path)
+        except FileNotFoundError:
+            pass
+        
     return upload_photo(new_photo)
