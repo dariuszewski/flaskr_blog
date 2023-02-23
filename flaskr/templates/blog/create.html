@@ -2,6 +2,7 @@
 
 {% block header %}
   <h1>{% block title %}New Post{% endblock %}</h1>
+  {{ ckeditor.load(pkg_type="basic") }}
 {% endblock %}
 
 {% block content %}
@@ -9,8 +10,11 @@
   <form method="post" enctype="multipart/form-data"> 
     <label for="title">Title</label>
     <input name="title" id="title" value="{{ request.form['title'] }}">
+
     <label for="body">Body</label>
-    <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+    {{ ckeditor.create() }}
+    <!-- <textarea name="body" id="body">{{ request.form['body'] }}</textarea> -->
+    <hr>
     <label for="body">Image</label>
     <input type="file" name="photo" id="photo" value="{{ request.form['photo'] }}">
     <span class="label-span">Tags</span>

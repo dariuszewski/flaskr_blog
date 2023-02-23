@@ -59,7 +59,8 @@ def create():
     all_tags = Tag.get_all_tags()
     if request.method == 'POST':
         title = request.form['title']
-        body = request.form['body']
+        # body = request.form['body']
+        body = request.form.get('ckeditor')
         tags = validate_tags(request.form['tags'])
         photo = request.files['photo']
         error = None
@@ -98,7 +99,7 @@ def update(id):
     all_tags = Tag.get_all_tags()
     if request.method == 'POST':
         title = request.form['title']
-        body = request.form['body']
+        body = request.form.get('ckeditor')
         tags = validate_tags(request.form['tags'])
         photo = request.files['photo']
         remove_photo = request.form.getlist('remove_photo')

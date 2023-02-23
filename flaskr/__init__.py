@@ -29,8 +29,9 @@ def create_app(test_config=None):
     # register extensions
     # Using this design pattern, no application-specific state is stored on the extension object,
     # so one extension object can be used for multiple apps.
-    from flaskr.extensions import db, photos
+    from flaskr.extensions import db, photos, ckeditor
     db.init_app(app)
+    ckeditor.init_app(app)
     configure_uploads(app, photos)
     # Create the database tables in the app context (since no request is available at this stage).
     # This doesn't update existing tables (use Alembic to do that).

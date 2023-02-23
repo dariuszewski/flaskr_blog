@@ -13,7 +13,7 @@
             {% if post.image %}
                 <img src="{{ url_for('static', filename='img/' + post.image) }}" alt="" class="post-image">
             {% endif %}
-            <p class="body">{{ post['body'] }}</p>
+            <p class="body">{{ post['body']|safe }}</p>
         </div>
     </div>
     <div></div>

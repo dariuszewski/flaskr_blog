@@ -2,6 +2,7 @@
 
 {% block header %}
   <h1>{% block title %}Edit "{{ post['title'] }}"{% endblock %}</h1>
+  {{ ckeditor.load(pkg_type="basic") }}
 {% endblock %}
 
 {% block content %}
@@ -9,8 +10,11 @@
     <label for="title">Title</label>
     <input name="title" id="title"
       value="{{ request.form['title'] or post['title'] }}" required>
+
     <label for="body">Body</label>
-    <textarea name="body" id="body">{{ request.form['body'] or post['body'] }}</textarea>
+    {{ ckeditor.create(value=request.form['body'] or post['body']) }}
+    <!-- <textarea name="body" id="body">{{ request.form['body'] or post['body'] }}</textarea> -->
+
     <label for="remove_photo">Remove photo: 
       <input type="checkbox" value="{{ request.form['remove_photo'] or None }}" name="remove_photo" id="remove_photo">
     </label>
