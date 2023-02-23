@@ -5,6 +5,7 @@ __pycache__/
 *.img
 
 instance/
+flaskr/static/img
 
 .pytest_cache/
 .coverage

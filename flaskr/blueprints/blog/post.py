@@ -177,23 +177,21 @@ def upload_photo(photo):
     i.save('/'.join([current_app.config['UPLOADED_PHOTOS_DEST'], filename]))
     return filename
 
+
 def update_photo(old_photo, new_photo, remove_photo):
-    if remove_photo:
-        if old_photo:
-            old_photo_path = '/'.join([current_app.config['UPLOADED_PHOTOS_DEST'], old_photo])
-            try:
-                os.remove(old_photo_path)
-            except FileNotFoundError:
-                pass
-        return None
-    if not new_photo or new_photo.filename is None:
-        print('im hereee')
+
+    if (not new_photo or new_photo.filename is None) and not remove_photo:
+        # if no new photo or new photo is not an empty stream
         return old_photo
     if old_photo:
+        # if new photo and old photo is not none
         old_photo_path = '/'.join([current_app.config['UPLOADED_PHOTOS_DEST'], old_photo])
         try:
             os.remove(old_photo_path)
         except FileNotFoundError:
-            pass
-        
+            pass  
+    if remove_photo:
+        # if remove photo
+        return None
+    # if new_photo is a file and remove_photo is false.
     return upload_photo(new_photo)
