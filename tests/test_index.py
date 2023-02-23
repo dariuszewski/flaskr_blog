@@ -2,6 +2,7 @@ import pytest
 import io
 
 from flaskr.models.post import Post
+from flaskr.models.tag import Tag
 from flaskr.models.comment import Comment
 
 
@@ -43,20 +44,19 @@ def test_filters(client, auth, database, path, data_in, data_not_in):
 
 
 def test_pagination(client, auth, database):
-    # Given: User is logged in and creates at least 6 posts
-    auth.login()
+    # Given: At least 6 posts
     for i in range(6):
-        client.post('/create', 
-                data={'title': f'Post{i}', 'body': f'Body{i}', 'tags': f'tag{i}', 'photo': (io.BytesIO(b"abcdef"), '')}, 
-                content_type='multipart/form-data')
+        post = Post(title=f"Post{i}", body=f'Body{i}', image=None)
+        post.tags = [Tag(body=f'test{i}')]
+        post.save()
     # When:
     response = client.get('/')
     # Then:
     assert b'Post1' in response.data
-    assert b'Post4' not in response.data
+    assert b'Post5' not in response.data
     # When:
     page_2 = client.get('/?page=2')
     # Then:
     page_2.status_code == 200
-    assert b'Post4' in page_2.data
+    assert b'Post5' in page_2.data
     assert b'Post1' not in page_2.data
