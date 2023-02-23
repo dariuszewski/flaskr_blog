@@ -50,63 +50,10 @@ def test_remove_photo(app):
     result = update_photo(old_photo.filename, new_photo, True)
     assert result is None  
 
+
 def test_remove_photo_without_old_photo(app):
     # third if at line 212 of post.py
     old_photo = None
     new_photo = None
     result = update_photo(old_photo, new_photo, True)
     assert result is None  
-
-# @pytest.mark.parametrize(
-#     ('old_photo', 'new_photo', 'remove_photo', 'expected_output'), (
-#     (None, None, True, None),
-#     (None, TestPhoto(), True, None),
-# ))
-# def test_remove_photo(app, old_photo, new_photo, remove_photo, expected_output):
-#     # test update_photo with remove_photo = True
-
-#     class TestOldPhoto():
-#         filename = old_photo
-
-#         def read():
-#             fp = 'tests/img/' + TestOldPhoto.filename
-#             i = Image.open(fp)
-#             bytes_ = io.BytesIO()
-#             i.save(bytes_, 'jpeg')
-#             return bytes_.getvalue()
-        
-#     old_photo = TestOldPhoto()
-#     new_photo = new_photo
-#     filename = update_photo(old_photo.filename, new_photo, remove_photo)
-
-#     assert filename == expected_output
-
-
-# def test_update_photo_with_old_photo(app):
-#     # Test update new photo with removal of old photo.
-#     class TestOldPhoto():
-#         filename = 'notfound.jpeg'
-
-#         def read():
-#             fp = 'tests/img/' + TestOldPhoto.filename
-#             i = Image.open(fp)
-#             bytes_ = io.BytesIO()
-#             i.save(bytes_, 'jpeg')
-#             return bytes_.getvalue()
-        
-
-#     old_photo = TestOldPhoto()
-#     new_photo = TestPhoto()
-#     filename = update_photo(old_photo.filename, new_photo, False)
-
-#     assert filename is not None
-
-# # def test_update_photo_without_old_photo(app):
-# #     # Test upload photo where old_photo = None
-
-# #     old_photo = None
-# #     new_photo = TestPhoto()
-# #     filename = update_photo(old_photo, new_photo, False)
-
-# #     assert filename is not None
-
