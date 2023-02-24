@@ -1,0 +1,20 @@
+<article class="post">
+    <header>
+        <div>
+            <h1><a href="{{ post['url'] }}">Newest feed about Flask from Reddit</a></h1>
+            <div class="about">by {{ post['author'] }} on {{ post['created'] }}</div>
+        </div>
+    </header>
+    <div class="clearfix">
+        <div class="post-body">
+            <p class="body">{{ post['body']|safe }}</p>
+        </div>
+    </div>
+    <div></div>
+    <div class="post-footer">
+            <span class="tag-pill-sm not-selected">Flask</span>
+        <hr>
+    </div>
+    <hr>
+    </div>
+</article>

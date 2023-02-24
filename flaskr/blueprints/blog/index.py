@@ -1,6 +1,8 @@
+import re
 from flask import (
     Blueprint, render_template, request, flash
 )
+import feedparser
 
 from flaskr.models.post import Post
 
@@ -29,5 +31,19 @@ def index():
     if message and not posts.items:
         posts = Post.get_all(page=page)
         flash(f"Can't find posts matching criterium: '{message}'")
+    feed = parse_and_feed_rss()
+    return render_template('blog/index.html', posts=posts, keyword=message, post=feed)
 
-    return render_template('blog/index.html', posts=posts, keyword=message)
+def parse_and_feed_rss():
+    FEEDURL = 'https://www.reddit.com/r/flask/new/.rss?sort=new'
+    feed = feedparser.parse(FEEDURL)
+    article = feed['entries'][0]
+    body = re.search('<!-- SC_OFF -->(.*)<!-- SC_ON -->', article.get('content')[0]['value']).group(1)
+    post = {
+        'url': article.get('link'),
+        'author': article.get('author').replace('/u/', ''),
+        'created': article.get('updated'),
+        'body': body
+    }
+    return post
+

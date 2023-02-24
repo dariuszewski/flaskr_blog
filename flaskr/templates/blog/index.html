@@ -19,6 +19,7 @@
 {% endblock %}
 
 {% block content %}
+{% include 'blog/rss.html' %}
 {% for post in posts %}
   {% include 'blog/single_post.html' %}
 {% if not loop.last %}
