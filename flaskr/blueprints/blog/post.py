@@ -103,7 +103,7 @@ def update(id):
         tags = validate_tags(request.form['tags'])
         photo = request.files['photo']
         remove_photo = request.form.getlist('remove_photo')
-                                    
+        print(body)                      
         error = None
 
         if not tags:

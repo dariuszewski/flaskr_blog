@@ -8,15 +8,17 @@
 {% block content %}
 <!-- onsubmit="return false;" id="form" novalidate -->
   <form method="post" enctype="multipart/form-data"> 
+
     <label for="title">Title</label>
     <input name="title" id="title" value="{{ request.form['title'] }}">
 
-    <label for="body">Body</label>
+    <label for="ckeditor">Body</label>
     {{ ckeditor.create() }}
-    <!-- <textarea name="body" id="body">{{ request.form['body'] }}</textarea> -->
+  
     <hr>
-    <label for="body">Image</label>
+    <label for="photo">Image</label>
     <input type="file" name="photo" id="photo" value="{{ request.form['photo'] }}">
+
     <span class="label-span">Tags</span>
     <div>
       <input id="custom-tag" placeholder="Add new tag...">
@@ -29,6 +31,7 @@
       {% endfor %}
     </div>
     <input type="hidden" name="tags" id="tags">
+    
     <input id="submit" type="submit" value="Save">
   </form>
 

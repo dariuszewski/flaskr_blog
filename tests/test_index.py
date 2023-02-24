@@ -33,6 +33,7 @@ def test_index(client, auth, database):
     ('keyword=Body1000', 'find posts matching criterium:', 'dummy'),
     ('tag=tag1', 'tag1', 'tag2'),
     ('tag=tag1000', 'find posts matching criterium:', 'dummy'),
+    ('', 'test', 'dummy'),
 ))
 def test_filters(client, auth, database, path, data_in, data_not_in):
     auth.login()

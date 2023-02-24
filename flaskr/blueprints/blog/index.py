@@ -16,18 +16,18 @@ def index():
     tag = request.args.get('tag')
     keyword = request.args.get('keyword')
     message = None
-    
-    if tag or keyword:
-        if tag:
-            message = tag
-            posts = Post.get_posts_by_tag(tag=tag, page=page)
-        if keyword:
-            message = keyword
-            posts = Post.get_posts_by_phrase(keyword=keyword, page=page)
-        if not posts.items:
-            posts = Post.get_all(page=page)
-            flash(f"Can't find posts matching criterium: '{keyword}'")           
+
+    if tag:
+        message = tag
+        posts = Post.get_posts_by_tag(tag=tag, page=page)
+    elif keyword:
+        message = keyword
+        posts = Post.get_posts_by_phrase(keyword=keyword, page=page)
     else:
         posts = Post.get_all(page=page)
+    
+    if message and not posts.items:
+        posts = Post.get_all(page=page)
+        flash(f"Can't find posts matching criterium: '{message}'")
 
     return render_template('blog/index.html', posts=posts, keyword=message)

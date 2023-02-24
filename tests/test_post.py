@@ -45,6 +45,15 @@ def test_exists_required(client, auth, path, database):
     auth.login()
     assert client.post(path).status_code == 404
 
+from PIL import Image
+class TestPhoto():
+    filename = 'input.jpg'
+
+    def read(self):
+        i = Image.open('tests/img/input.jpg')
+        bytes_ = io.BytesIO()
+        i.save(bytes_, 'jpeg')
+        return bytes_.getvalue()
 
 def test_create(client, auth, database):
     # Given: logged in user and working endpoint.
@@ -53,9 +62,10 @@ def test_create(client, auth, database):
     assert client.get('/create').status_code == 200
     # When: Posting data.
     client.post('/create', 
-                data={'title': 'created', 'body': 'created', 'tags': 'created', 'photo': (io.BytesIO(b"abcdef"), '')},
+                data={'title': 'created', 'ckeditor': 'created', 'tags': 'created', 'photo': (io.BytesIO(b"abcdef"), '')},
                 content_type='multipart/form-data')
     # Then: Title available in list of titles.
+    response = client.get('/')
     assert 'created' in list(*zip(*database.session.execute(database.select(Post.title)).all()))
 
 
@@ -65,7 +75,7 @@ def test_update(client, auth, database):
     # Assert: User can upadate post with author_id=1.
     assert client.get('/1/update').status_code == 200
     client.post('/1/update', 
-                data={'title': 'updated', 'body': 'updated', 'tags': 'updated', 'photo': (io.BytesIO(b"abcdef"), '')},
+                data={'title': 'updated', 'ckeditor': 'updated', 'tags': 'updated', 'photo': (io.BytesIO(b"abcdef"), '')},
                 content_type='multipart/form-data')
     # Assert post with id=1 have title 'updated'.
     assert Post.get_post_by_id(1).title == 'updated'
@@ -73,7 +83,7 @@ def test_update(client, auth, database):
 
 
 @pytest.mark.parametrize(
-    ('path', 'title', 'body', 'tags', 'photo', 'message'), (
+    ('path', 'title', 'ckeditor', 'tags', 'photo', 'message'), (
     ('/create','', '', '', '', 'Title is required.'),
     ('/create', 'Title', '', '', '', 'Body is required.'),
     ('/create', 'Title', 'Body', '', '', 'At least 1 tag is required.'),
@@ -83,12 +93,12 @@ def test_update(client, auth, database):
     ('/1/update', 'Title', 'Body', '', '', 'At least 1 tag is required.'),
     # ('/1/update', 'Title', 'Body', 'Tag', (io.BytesIO(b"abcdef"), 'test'*1000), 'Request Entity Too Large'),
 ))
-def test_create_update_validate(client, auth, database, path, title, body, tags, photo, message):
+def test_create_update_validate(client, auth, database, path, title, ckeditor, tags, photo, message):
     # Test if validation of input works.
     auth.login()
     if not photo:
         photo = (io.BytesIO(b"abcdef"), '')
-    response = client.post(path, data={'title': title, 'body': body, 'tags': tags, 'photo': photo},
+    response = client.post(path, data={'title': title, 'ckeditor': ckeditor, 'tags': tags, 'photo': photo},
                            content_type='multipart/form-data')
     assert bytes(message, encoding='utf-8') in response.data
 
