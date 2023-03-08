@@ -11,7 +11,7 @@ def create_app(test_config=None):
     # The instance folder is designed to not be under version control and be deployment specific. 
     # It’s the perfect place to drop things that either change at runtime or configuration files.
 
-    os.environ["APP_SETTINGS"] = 'flaskr.config.DevelopmentConfig' #
+    # os.environ["APP_SETTINGS"] = 'flaskr.config.DevelopmentConfig'
     # Override app.config.from_mapping()
     if test_config is None:
         # load the instance config if not testing
