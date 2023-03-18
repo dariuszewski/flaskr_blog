@@ -3,7 +3,10 @@ import os
 from flask import Flask
 from flask_uploads import configure_uploads
 
-# Application Factory Pattern. This can be called with flask --app flaskr --debug run
+# Application Factory Pattern. This can be called with 
+#       dev: flask --app flaskr --debug run
+#       prod: waitress-serve --host 127.0.0.1 --call 'flaskr:create_app'
+
 # App will expect to have $env:APP_SETTINGS variable which contains Config Object (ex. flaskr.config.DevelopmentConfig). 
 def create_app(test_config=None):
     # Create and configure the app. Run with flask --app flaskr --debug run
@@ -11,7 +14,6 @@ def create_app(test_config=None):
     # The instance folder is designed to not be under version control and be deployment specific. 
     # It’s the perfect place to drop things that either change at runtime or configuration files.
 
-    # os.environ["APP_SETTINGS"] = 'flaskr.config.DevelopmentConfig'
     # Override app.config.from_mapping()
     if test_config is None:
         # load the instance config if not testing
@@ -19,8 +21,8 @@ def create_app(test_config=None):
         app.config.from_object(app_settings)
         app.config['UPLOADED_PHOTOS_DEST']  = app.root_path + "/static/img"
     else:
-        # Load testing config when passed in. 
-        app.config.from_mapping(test_config) # Special configuration for testing purposes.
+        # Special configuration for testing purposes. 
+        app.config.from_mapping(test_config) 
         
     # Ensure the instance folder exists, this is only for sqlite.
     os.makedirs(app.config['UPLOADED_PHOTOS_DEST'], exist_ok=True)
