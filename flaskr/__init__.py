@@ -6,7 +6,7 @@ from flask_uploads import configure_uploads
 # Application Factory Pattern. This can be called with 
 #       dev: flask --app flaskr --debug run
 #       prod: waitress-serve --host 127.0.0.1 --call 'flaskr:create_app'
-
+#       docker: docker build --tag flaskr_blog .  +  docker run -p 8000:8080 -d flaskr_blog
 # App will expect to have $env:APP_SETTINGS variable which contains Config Object (ex. flaskr.config.DevelopmentConfig). 
 def create_app(test_config=None):
     # Create and configure the app. Run with flask --app flaskr --debug run
