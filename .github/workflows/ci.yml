@@ -38,6 +38,9 @@ jobs:
       - name: Set PYTHONPATH
         run: echo "PYTHONPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
 
+      - name: Set Environment Variables
+        run: echo "STATIC_FILE_PATH=./static" >> $GITHUB_ENV
+
       # Check file permissions in the test directory
       - name: Check permissions
         run: ls -la ./
