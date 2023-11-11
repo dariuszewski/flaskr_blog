@@ -43,6 +43,23 @@ jobs:
         run: pytest
         working-directory: ./
 
+  build-and-deploy:
+    needs: tests 
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Google Cloud
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: singular-citron-331610
+
+      - name: Build and Deploy to App Engine
+        run: |
+          gcloud app deploy app.yaml --project singular-citron-331610
 
   # build-and-deploy:
   #   needs: tests 
