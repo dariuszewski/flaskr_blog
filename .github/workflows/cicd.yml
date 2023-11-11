@@ -1,5 +1,4 @@
-name: CI (testing)
-
+name: CI/CD
 
 on:
   push:
@@ -7,12 +6,6 @@ on:
       - '*'
       
 jobs:
-  hello:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Say Hello
-        run: echo "Hello, World!"
 
   tests:
     runs-on: ubuntu-latest
@@ -34,22 +27,42 @@ jobs:
           pip install -r requirements.txt
         working-directory: ./ 
 
-      # Add project directory to PYTHONPATH
+      # Add project directory to PYTHONPATH.
       - name: Set PYTHONPATH
         run: echo "PYTHONPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
 
+      # Setup static file path for testing.
       - name: Set Environment Variables
         run: echo "STATIC_FILE_PATH=./static" >> $GITHUB_ENV
 
-      # Check file permissions in the test directory
-      - name: Check permissions
-        run: ls -la ./
-
-      # Optionally, modify permissions
+      # Modify permissions.
       - name: Modify permissions
         run: chmod -R 755 ./
 
+      # Run unit tests.
       - name: Run unit tests
         run: pytest
         working-directory: ./
       
+  deploy:
+    needs: tests
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      # Clone repo into runner's memory.
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up python env in the runner's memory.
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.10.11
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: blog-flaskr  # Replace with your Azure Web App name
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Set this in your repository's secrets
+          package: .  # The path to your application code
