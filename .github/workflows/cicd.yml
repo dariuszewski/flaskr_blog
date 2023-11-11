@@ -43,23 +43,24 @@ jobs:
         run: pytest
         working-directory: ./
 
-  build-and-deploy:
-    needs: tests 
-    runs-on: ubuntu-latest
+  deploy:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        workload_identity_provider: 'projects/213209037269/locations/global/workloadIdentityPools/flaskr/subject/SUBJECT_ATTRIBUTE_VALUE'
+        service_account: 'singular-citron-331610@appspot.gserviceaccount.com'
 
-      - name: Set up Google Cloud
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: singular-citron-331610
+    - id: 'deploy'
+      uses: 'google-github-actions/deploy-appengine@v1'
 
-      - name: Build and Deploy to App Engine
-        run: |
-          gcloud app deploy app.yaml --project singular-citron-331610
+    # Example of using the output
+    - id: 'test'
+      run: 'curl "${{ steps.deploy.outputs.url }}"'
 
   # build-and-deploy:
   #   needs: tests 
