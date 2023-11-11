@@ -38,9 +38,15 @@ jobs:
       - name: Set PYTHONPATH
         run: echo "PYTHONPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
 
-      # Run unit tests
+      # Check file permissions in the test directory
+      - name: Check permissions
+        run: ls -la ./tests
+
+      # Optionally, modify permissions
+      - name: Modify permissions
+        run: chmod -R 755 ./tests
+
       - name: Run unit tests
         run: pytest
         working-directory: ./tests
-
       
