@@ -34,15 +34,9 @@ jobs:
           pip install -r requirements.txt
         working-directory: ./ 
 
-      - name: Print Current Working Directory
-        run: |
-          pwd  # Print the current working directory
-        working-directory: ${{ github.workspace }}  # Set the working directory to the root of your repository
-
-      - name: List Directory Contents
-        run: |
-          ls  # List the directory contents
-        working-directory: ${{ github.workspace }}  # Set the working directory to the root of your repository
+      - name: Run unit tests
+        run: pytest
+        working-directory: ${{ github.workspace }}
 
 
       
