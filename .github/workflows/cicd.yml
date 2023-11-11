@@ -55,6 +55,7 @@ jobs:
       uses: 'google-github-actions/auth@v1'
       with:
         project_id: 'singular-citron-331610'
+        working_directory: '.'
         workload_identity_provider: 'projects/213209037269/locations/global/workloadIdentityPools/flaskr/subject/SUBJECT_ATTRIBUTE_VALUE'
         service_account: 'singular-citron-331610@appspot.gserviceaccount.com'
 
