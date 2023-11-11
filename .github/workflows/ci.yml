@@ -34,9 +34,13 @@ jobs:
           pip install -r requirements.txt
         working-directory: ./ 
 
+      # Add project directory to PYTHONPATH
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
+
+      # Run unit tests
       - name: Run unit tests
         run: pytest
-        working-directory: ${{ github.workspace }}
-
+        working-directory: ./tests
 
       
