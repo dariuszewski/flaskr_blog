@@ -42,12 +42,18 @@ jobs:
       - name: Run unit tests
         run: pytest
         working-directory: ./
-      
+
+
   build-and-deploy:
     needs: tests 
     runs-on: ubuntu-latest
 
     steps:
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -61,6 +67,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker build -t regflaskr.azurecr.io/flaskr_blog:${{ github.sha }} .
+          echo ${{ secrets.AZURE_PASSWORD }} | docker login regflaskr.azurecr.io --username ${{ secrets.AZURE_USERNAME }} --password-stdin
           docker push regflaskr.azurecr.io/flaskr_blog:${{ github.sha }}
 
       - name: Deploy to Azure Web App
