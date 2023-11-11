@@ -14,7 +14,7 @@ class TestPhoto():
     filename = 'input.jpg'
 
     def read(self):
-        i = Image.open('./tests/img/input.jpg')
+        i = Image.open('../tests/img/input.jpg')
         bytes_ = io.BytesIO()
         i.save(bytes_, 'jpeg')
         return bytes_.getvalue()
