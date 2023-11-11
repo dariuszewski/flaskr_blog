@@ -2,7 +2,7 @@ venv/
 
 *.pyc
 __pycache__/
-
+*.img
 
 instance/
 flaskr/static/img
