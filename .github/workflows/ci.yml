@@ -40,11 +40,11 @@ jobs:
 
       # Check file permissions in the test directory
       - name: Check permissions
-        run: ls -la ./tests
+        run: ls -la ./
 
       # Optionally, modify permissions
       - name: Modify permissions
-        run: chmod -R 755 ./tests
+        run: chmod -R 755 ./
 
       - name: Run unit tests
         run: pytest
