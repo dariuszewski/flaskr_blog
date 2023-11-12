@@ -24,7 +24,7 @@ def app():
         'TESTING': True, # Tells Flask that the app is in test mode to change some internal behavior. Other extensions can also use the flag.
         'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
         'SECRET_KEY': 'test',
-        'UPLOADED_PHOTOS_DEST': '/static/test/img',
+        'UPLOADED_PHOTOS_DEST': './static/test/img',
         'MAX_CONTENT_LENGTH': 1000
     })
 

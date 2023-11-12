@@ -6,7 +6,7 @@ def test_config():
     assert create_app(
         {'TESTING': True, 
         'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
-        'UPLOADED_PHOTOS_DEST': "/static/test/img"
+        'UPLOADED_PHOTOS_DEST': "./static/test/img"
         }).testing
 
 
